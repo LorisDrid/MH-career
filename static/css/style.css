@@ -1,187 +1,506 @@
-/* MH-career — feuille unique, sans framework.
-   La palette est en proprietes personnalisees : les SVG generes en phase 4
-   s'appuieront dessus pour rester coherents avec le site. */
+/* MH-career — « carnet de chasse »
+ *
+ * Registre de terrain : fond noir chaud grainé, os pour le texte, cuivre comme
+ * UNIQUE couleur de donnée. Filets marqués, colonnes numériques denses, marges
+ * généreuses. Aucun JavaScript, aucune ressource externe.
+ *
+ * Toutes les valeurs ci-dessous ont été vérifiées par calcul WCAG, pas jugées à
+ * l'œil. Les ratios sont notés en commentaire ; les recalculer avant toute
+ * modification de la palette.
+ */
 
-:root {
-  --ink:        #23201c;
-  --ink-soft:   #5f574c;
-  --ink-faint:  #948b7d;
-  --paper:      #f6f2ea;
-  --surface:    #fffdf8;
-  --line:       #ded5c6;
-  --accent:     #9a5b28;
-  --accent-dim: #c98a53;
-  --radius: 6px;
-  --measure: 68rem;
-  color-scheme: light dark;
+/* ---------- Polices, auto-hébergées ----------
+ * Fichiers à déposer dans static/fonts/ sous ces noms exacts.
+ * Tant qu'ils sont absents, les replis système prennent le relais et le site
+ * reste lisible — c'est tout l'intérêt de `font-display: swap`. */
+
+@font-face {
+  font-family: "Fraunces";
+  src: url("../fonts/fraunces-600.woff2") format("woff2");
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fraunces";
+  src: url("../fonts/fraunces-900.woff2") format("woff2");
+  font-weight: 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Plex";
+  src: url("../fonts/plex-sans-400.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Plex";
+  src: url("../fonts/plex-sans-500.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Plex";
+  src: url("../fonts/plex-sans-600.woff2") format("woff2");
+  font-weight: 600;
+  font-display: swap;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --ink:        #ece6dc;
-    --ink-soft:   #b3a996;
-    --ink-faint:  #7b7364;
-    --paper:      #16140f;
-    --surface:    #1e1b16;
-    --line:       #332e26;
-    --accent:     #d79a5c;
-    --accent-dim: #8a5f34;
-  }
+:root {
+  /* Fonds */
+  --ground:      #0c0a09;
+  --surface:     #16130f;
+  --surface-up:  #1e1a15;
+  --line:        #2a241d;
+
+  /* Texte — ratios sur --ground : 15.65 / 6.89 / 5.08 */
+  --bone:        #ece4d6;
+  --bone-dim:    #a39785;
+  --bone-faint:  #8a8070;
+
+  /* Donnée — une seule teinte, 5.96 et 8.55 sur --ground */
+  --copper:      #c87a4a;
+  --copper-lift: #e39a68;
+
+  /* Rampe de magnitude : une teinte, du plus clair au plus dense.
+   * Un arc-en-ciel encoderait la magnitude sur la teinte, ce qui ne se lit pas.
+   * Ratios du texte retenu sur chaque palier : 13.01 / 10.78 / 8.05 / 5.49 / 5.23.
+   * Au palier 4 le texte bascule en sombre : l'os n'y tient que 2.99. */
+  --lv-0: rgba(200, 122, 74, 0.10);
+  --lv-1: rgba(200, 122, 74, 0.22);
+  --lv-2: rgba(200, 122, 74, 0.38);
+  --lv-3: rgba(200, 122, 74, 0.58);
+  --lv-4: rgba(200, 122, 74, 0.92);
+
+  --display: "Fraunces", Georgia, "Times New Roman", serif;
+  --sans: "Plex", ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif;
+
+  --measure: 74rem;
+  --gutter: clamp(1.15rem, 4vw, 3rem);
+
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
 
+html { -webkit-text-size-adjust: 100%; }
+
 body {
   margin: 0;
-  background: var(--paper);
-  color: var(--ink);
-  font: 16px/1.6 ui-sans-serif, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  -webkit-text-size-adjust: 100%;
+  background: var(--ground);
+  color: var(--bone);
+  font: 400 16px/1.65 var(--sans);
+  font-feature-settings: "kern" 1;
 }
 
-h1, h2, h3 { line-height: 1.2; font-weight: 650; letter-spacing: -0.01em; }
-h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); margin: 0 0 0.4em; }
-h2 { font-size: 1.25rem; margin: 2.5rem 0 0.8rem; }
-
-a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
-a:hover { color: var(--ink); }
-
-code { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-size: 0.9em; }
-
-.skip {
-  position: absolute; left: -999px;
-  background: var(--accent); color: var(--paper); padding: 0.5rem 1rem;
+/* Le grain. Une turbulence SVG en data: URI — quelques centaines d'octets,
+ * aucune image externe, et c'est lui qui donne la matière que le fond plat
+ * ne peut pas avoir. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.4;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)' opacity='0.09'/%3E%3C/svg%3E");
 }
-.skip:focus { left: 0.5rem; top: 0.5rem; z-index: 10; }
 
-/* --- En-tete --- */
+body > * { position: relative; z-index: 1; }
+
+/* ---------- Typographie ---------- */
+
+h1, h2, h3 {
+  font-family: var(--display);
+  font-weight: 900;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(2.6rem, 7vw, 4.6rem);
+  margin-bottom: 0.35em;
+}
+
+h2 {
+  font-weight: 600;
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  letter-spacing: -0.01em;
+  margin: 4.5rem 0 1.4rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--line);
+}
+
+/* Le marqueur cuivre des sections : un losange, rappel du sceau de guilde. */
+h2::before {
+  content: "";
+  display: inline-block;
+  width: 0.42em;
+  height: 0.42em;
+  margin-right: 0.6em;
+  vertical-align: 0.12em;
+  background: var(--copper);
+  transform: rotate(45deg);
+}
+
+a { color: var(--copper-lift); text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+a:hover { color: var(--bone); }
+
+.lede {
+  font-size: clamp(1.02rem, 2vw, 1.2rem);
+  color: var(--bone-dim);
+  max-width: 46ch;
+  margin: 0 0 3rem;
+  text-wrap: pretty;
+}
+
+.skip { position: absolute; left: -999px; }
+.skip:focus {
+  left: 1rem; top: 1rem; z-index: 20;
+  background: var(--copper); color: var(--ground);
+  padding: 0.6rem 1rem; border-radius: 2px;
+}
+
+/* ---------- En-tête ---------- */
 
 .masthead {
-  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.6rem 1.4rem;
-  max-width: var(--measure); margin: 0 auto;
-  padding: 1.5rem 1rem 1.2rem;
-  border-bottom: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.7rem 2rem;
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 1.7rem var(--gutter) 1.2rem;
+  /* Double filet : la signature d'un registre. */
+  border-bottom: 3px double var(--line);
 }
+
 .masthead__brand {
-  font-weight: 700; font-size: 1.05rem; letter-spacing: 0.02em;
-  color: var(--ink); text-decoration: none;
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: 1.16rem;
+  letter-spacing: 0.01em;
+  color: var(--bone);
+  text-decoration: none;
 }
-.masthead__nav { display: flex; flex-wrap: wrap; gap: 1.1rem; font-size: 0.93rem; }
-.masthead__nav a { color: var(--ink-soft); text-decoration: none; }
-.masthead__nav a:hover { color: var(--accent); text-decoration: underline; }
 
-.page { max-width: var(--measure); margin: 0 auto; padding: 2rem 1rem 4rem; }
+.masthead__nav { display: flex; flex-wrap: wrap; gap: 1.5rem; }
 
-.lede { color: var(--ink-soft); font-size: 1.05rem; max-width: 46rem; margin-top: 0; }
+.masthead__nav a {
+  color: var(--bone-dim);
+  text-decoration: none;
+  font-size: 0.83rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid transparent;
+}
+.masthead__nav a:hover { color: var(--bone); border-bottom-color: var(--copper); }
 
-/* --- Valeurs : inconnu contre zero constate --- */
+.page { max-width: var(--measure); margin: 0 auto; padding: 3.5rem var(--gutter) 6rem; }
 
-.v--known { font-variant-numeric: tabular-nums; }
-.v--unknown, .num--unknown { color: var(--ink-faint); }
-
-/* --- Grille de statistiques --- */
+/* ---------- Tuiles de statistiques ----------
+ * Pas de boîtes imbriquées : un seul encadrement, des filets verticaux, et le
+ * chiffre qui domine. */
 
 .stat-grid {
-  list-style: none; margin: 2rem 0; padding: 0;
-  display: grid; gap: 1px;
-  grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
-  background: var(--line); border: 1px solid var(--line); border-radius: var(--radius);
-  overflow: hidden;
+  list-style: none;
+  margin: 0 0 3.5rem;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
 }
+
 .stat {
-  background: var(--surface);
-  padding: 1rem 1.1rem;
-  display: flex; flex-direction: column; gap: 0.15rem;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 1.5rem 1.4rem 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
 }
-.stat__value { font-size: 1.6rem; font-weight: 650; line-height: 1.1; }
-.stat__label { font-size: 0.82rem; color: var(--ink-soft); }
-.stat__note { font-size: 0.72rem; color: var(--ink-faint); }
 
-/* --- Tableaux --- */
+.stat__value {
+  font-size: clamp(2rem, 4.2vw, 2.9rem);
+  font-weight: 600;
+  line-height: 1;
+  /* Chiffres PROPORTIONNELS : à cette taille, des chiffres tabulaires
+   * paraissent lâches. Le tabulaire est réservé aux colonnes alignées. */
+  font-variant-numeric: proportional-nums;
+  color: var(--bone);
+}
 
-.table-scroll { overflow-x: auto; margin: 1rem 0 2rem; }
+.stat__label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  color: var(--bone-dim);
+  margin-top: 0.5rem;
+}
+
+.stat__note { font-size: 0.72rem; color: var(--bone-faint); }
+
+/* Une valeur inconnue ne doit pas crier aussi fort qu'un chiffre. */
+.v--unknown, .num--unknown { color: var(--bone-faint); }
+
+/* ---------- Tableaux ---------- */
+
+.table-scroll { overflow-x: auto; margin: 0 0 2rem; }
 
 table { border-collapse: collapse; width: 100%; font-size: 0.93rem; }
+
 thead th {
-  text-align: left; font-size: 0.78rem; text-transform: uppercase;
-  letter-spacing: 0.05em; color: var(--ink-soft); font-weight: 600;
-  padding: 0.5rem 0.75rem; border-bottom: 2px solid var(--line);
+  text-align: left;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--bone-faint);
+  padding: 0 0.85rem 0.7rem;
+  border-bottom: 1px solid var(--line);
   white-space: nowrap;
 }
-tbody th { text-align: left; font-weight: 550; }
+
 tbody th, tbody td {
-  padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--line);
+  padding: 0.62rem 0.85rem;
+  border-bottom: 1px solid var(--line);
+  /* Chiffres tabulaires ICI : ils s'alignent verticalement. */
+  font-variant-numeric: tabular-nums;
 }
+
+tbody th { text-align: left; font-weight: 500; color: var(--bone); }
 tbody tr:hover th, tbody tr:hover td { background: var(--surface); }
-.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+.num { text-align: right; }
+
+/* La barre de magnitude. Une seule couleur pour toutes les barres : les teinter
+ * selon leur valeur doublerait l'encodage de la longueur et gâcherait le seul
+ * canal libre. */
+.bar {
+  position: relative;
+  text-align: right;
+}
+.bar::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 1.55em;
+  width: calc(var(--v, 0) * 100%);
+  background: rgba(200, 122, 74, 0.2);
+  border-radius: 0 2px 2px 0;
+}
+.bar > * { position: relative; }
+
+/* La matrice. Rampe à teinte unique ; le texte bascule en sombre au dernier
+ * palier, où l'os ne tient plus le contraste. */
+.cell { text-align: right; }
+.cell--0 { background: var(--lv-0); }
+.cell--1 { background: var(--lv-1); }
+.cell--2 { background: var(--lv-2); }
+.cell--3 { background: var(--lv-3); }
+.cell--4 { background: var(--lv-4); color: var(--ground); font-weight: 600; }
+
+/* Matrice : la colonne d'identité reste visible pendant le défilement latéral.
+ * Sans elle, sur un écran étroit, on lit une valeur sans savoir de quel monstre
+ * il s'agit — le tableau redevient une grille de chiffres anonymes.
+ * Le fond doit être opaque, sinon les cellules teintées défilent par-dessous. */
+.matrix th[scope="row"] {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: var(--ground);
+  box-shadow: 1px 0 0 var(--line);
+}
+.matrix tbody tr:hover th[scope="row"] { background: var(--surface); }
+.matrix thead th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: var(--ground);
+}
+
+/* Sur écran étroit les colonnes de jeux se resserrent. Le total n'est PAS
+ * épinglé à son tour : en disposition automatique, le décalage d'une position
+ * collante ne peut pas coïncider avec une largeur de colonne calculée, et la
+ * colonne voisine apparaît dans l'écart. Resserrer suffit — la matrice tient
+ * alors presque entièrement dans la largeur. */
+@media (max-width: 42rem) {
+  .matrix th.col, .matrix td.cell { width: 3.9rem; }
+  .matrix td.bar { width: 4.6rem; }
+  .matrix tbody th, .matrix tbody td { padding-left: 0.55rem; padding-right: 0.55rem; }
+}
+
+/* Matrice : colonnes de jeux de largeur égale. Sans cela, un titre long étire
+ * sa colonne et la grille perd la régularité qui la rend lisible d'un coup. */
+.matrix th.col, .matrix td.cell { width: 5.6rem; }
+.matrix td.bar { width: 7.5rem; }
+
 .forms {
-  display: inline-block; margin-left: 0.5rem; padding: 0.05rem 0.4rem;
-  font-size: 0.72rem; color: var(--ink-soft);
-  border: 1px solid var(--line); border-radius: 999px;
+  display: inline-block;
+  margin-left: 0.55rem;
+  padding: 0.05rem 0.45rem;
+  font-size: 0.7rem;
+  color: var(--bone-faint);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  vertical-align: 0.05em;
 }
 
-/* --- Encarts --- */
-
-.notice {
-  margin: 2rem 0; padding: 1rem 1.2rem;
-  background: var(--surface);
-  border: 1px solid var(--line); border-left: 3px solid var(--accent);
-  border-radius: var(--radius);
+/* Légende d'échelle : sans elle, une rampe ne se lit pas. */
+.scale {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 1.6rem;
+  font-size: 0.75rem;
+  color: var(--bone-dim);
 }
-.notice p { margin: 0.5rem 0; }
-.notice p:first-child { margin-top: 0; }
-.notice p:last-child { margin-bottom: 0; }
-.notice--quiet { border-left-color: var(--line); font-size: 0.9rem; color: var(--ink-soft); }
+.scale__swatch {
+  display: inline-block;
+  width: 2.4rem;
+  height: 0.85rem;
+  /* Un écart de 2px entre les pastilles, jamais une bordure autour. */
+  margin-right: 2px;
+  border-radius: 1px;
+}
 
-/* --- Cartes --- */
+/* ---------- Cartes ---------- */
 
 .card-grid {
-  list-style: none; margin: 2rem 0; padding: 0;
-  display: grid; gap: 1rem;
-  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  list-style: none;
+  margin: 0 0 3rem;
+  padding: 0;
+  display: grid;
+  gap: 1px;
+  grid-template-columns: repeat(auto-fill, minmax(16.5rem, 1fr));
+  background: var(--line);
+  border: 1px solid var(--line);
 }
-.card {
-  background: var(--surface); border: 1px solid var(--line);
-  border-radius: var(--radius); padding: 1.1rem 1.2rem;
+
+.card { background: var(--ground); padding: 1.5rem 1.5rem 1.6rem; }
+.card:hover { background: var(--surface); }
+
+.card__title { font-size: 1.22rem; font-weight: 600; margin: 0 0 0.3rem; }
+.card__title a { color: var(--bone); text-decoration: none; }
+.card__title a:hover { color: var(--copper-lift); }
+
+.card__meta {
+  margin: 0 0 1.2rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--bone-faint);
 }
-.card__title { font-size: 1.05rem; margin: 0 0 0.3rem; }
-.card__title a { text-decoration: none; }
-.card__title a:hover { text-decoration: underline; }
-.card__meta { margin: 0 0 0.9rem; font-size: 0.82rem; color: var(--ink-soft); }
-.card__stats { display: grid; grid-template-columns: 1fr auto; gap: 0.3rem 1rem; margin: 0; }
-.card__stats dt { font-size: 0.85rem; color: var(--ink-soft); }
+
+.card__stats { display: grid; grid-template-columns: 1fr auto; gap: 0.45rem 1rem; margin: 0; }
+.card__stats dt { font-size: 0.85rem; color: var(--bone-dim); }
 .card__stats dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
-.card__empty { margin: 0.9rem 0 0; font-size: 0.8rem; color: var(--ink-faint); font-style: italic; }
 
-/* --- Chronologie et sources --- */
+.card__empty { margin: 1.1rem 0 0; font-size: 0.78rem; color: var(--bone-faint); font-style: italic; }
 
-.timeline { list-style: none; margin: 1rem 0 2rem; padding: 0; border-left: 2px solid var(--line); }
-.timeline__item { position: relative; padding: 0.4rem 0 0.4rem 1.2rem; }
+/* ---------- Chronologie ---------- */
+
+.timeline { list-style: none; margin: 0 0 3rem; padding: 0 0 0 1.4rem; border-left: 1px solid var(--line); }
+
+.timeline__item { position: relative; padding: 0.55rem 0; display: flex; gap: 1.2rem; align-items: baseline; }
 .timeline__item::before {
-  content: ""; position: absolute; left: -5px; top: 1rem;
-  width: 8px; height: 8px; border-radius: 50%;
-  background: var(--accent-dim);
+  content: "";
+  position: absolute;
+  left: -1.75rem;
+  top: 1.05rem;
+  width: 7px;
+  height: 7px;
+  background: var(--copper);
+  transform: rotate(45deg);
 }
-.timeline__item--start::before { background: var(--accent); }
-.timeline__date { font-variant-numeric: tabular-nums; color: var(--ink-soft); margin-right: 0.7rem; }
+.timeline__item--end::before { background: var(--line); box-shadow: inset 0 0 0 1px var(--copper); }
 
-.sources { padding-left: 1.1rem; color: var(--ink-soft); font-size: 0.92rem; }
+.timeline__date {
+  color: var(--bone-dim);
+  font-size: 0.85rem;
+  min-width: 8.5rem;
+}
+.timeline__label { font-weight: 500; }
 
-/* --- Prose et pied de page --- */
+/* Une pastille pleine ou creuse ne dit pas ce qu'elle distingue ; le mot, si.
+ * La forme reste, elle sert de repère une fois le mot lu. */
+.timeline__kind {
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--bone-faint);
+}
 
-.prose { max-width: 42rem; }
-.prose h2 { margin-top: 2rem; }
-.prose ul { padding-left: 1.2rem; }
+/* ---------- Encarts et prose ---------- */
+
+.notice {
+  margin: 0 0 3rem;
+  padding: 1.3rem 1.5rem;
+  background: var(--surface);
+  border-left: 2px solid var(--copper);
+}
+.notice p { margin: 0.6rem 0; color: var(--bone-dim); }
+.notice p:first-child { margin-top: 0; }
+.notice p:last-child { margin-bottom: 0; }
+.notice strong { color: var(--bone); }
+.notice--quiet { border-left-color: var(--line); font-size: 0.88rem; }
+
+.prose { max-width: 62ch; }
+.prose h2 { margin-top: 3.2rem; }
+.prose p { color: var(--bone-dim); }
+.prose strong { color: var(--bone); }
+.prose ul { padding-left: 1.1rem; }
+.prose li { color: var(--bone-dim); margin-bottom: 0.4rem; }
+
+.sources { padding-left: 1.1rem; color: var(--bone-dim); font-size: 0.9rem; }
+.sources code { color: var(--copper-lift); font-size: 0.85em; }
 
 .colophon {
-  max-width: var(--measure); margin: 0 auto;
-  padding: 1.5rem 1rem 3rem;
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 1.8rem var(--gutter) 4rem;
   border-top: 1px solid var(--line);
-  font-size: 0.85rem; color: var(--ink-soft);
+  font-size: 0.82rem;
+  color: var(--bone-faint);
 }
-.colophon p { margin: 0; max-width: 46rem; }
+.colophon p { margin: 0; max-width: 60ch; }
+.colophon strong { color: var(--bone-dim); }
 
-@media (max-width: 30rem) {
-  .stat__value { font-size: 1.35rem; }
-  .page { padding-top: 1.5rem; }
+/* ---------- Une seule entrée orchestrée ----------
+ * Un moment de révélation échelonné vaut mieux que des micro-interactions
+ * dispersées partout. */
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.stat, .card, .timeline__item {
+  animation: rise 0.5s cubic-bezier(0.2, 0.7, 0.3, 1) backwards;
+}
+.stat:nth-child(1), .card:nth-child(1), .timeline__item:nth-child(1) { animation-delay: 0.04s; }
+.stat:nth-child(2), .card:nth-child(2), .timeline__item:nth-child(2) { animation-delay: 0.09s; }
+.stat:nth-child(3), .card:nth-child(3), .timeline__item:nth-child(3) { animation-delay: 0.14s; }
+.stat:nth-child(4), .card:nth-child(4), .timeline__item:nth-child(4) { animation-delay: 0.19s; }
+.stat:nth-child(5), .card:nth-child(5), .timeline__item:nth-child(5) { animation-delay: 0.24s; }
+.stat:nth-child(6), .card:nth-child(6), .timeline__item:nth-child(6) { animation-delay: 0.29s; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+/* ---------- Petits écrans ---------- */
+
+@media (max-width: 34rem) {
+  .page { padding-top: 2.2rem; }
+  h2 { margin-top: 3rem; }
+  .stat { padding: 1.15rem 1rem 1.25rem; }
+  .stat__label { letter-spacing: 0.08em; }
+  table { font-size: 0.86rem; }
+  thead th, tbody th, tbody td { padding-left: 0.55rem; padding-right: 0.55rem; }
 }

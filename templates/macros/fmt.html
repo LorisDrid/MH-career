@@ -1,11 +1,14 @@
-{# Formatage des valeurs potentiellement inconnues.
+{# Formatage des valeurs potentiellement inconnues, et marques de données.
 
-   Un seul endroit a corriger si la convention evolue.
+   Un seul endroit à corriger si la convention évolue.
 
-   Rappel du piege (AGENTS.md 9) : dans Tera, null ET 0 sont falsy, donc
-   {% if valeur %} afficherait un tiret sur un zero pourtant constate. Le
+   Rappel du piège (AGENTS.md 9) : dans Tera, null ET 0 sont falsy, donc
+   {% if valeur %} afficherait un tiret sur un zéro pourtant constaté. Le
    filtre `default` est le seul moyen correct de les distinguer, et c'est
-   sur son resultat qu'on decide aussi de la classe CSS. #}
+   sur son résultat qu'on décide aussi de la classe CSS.
+
+   Même piège sur les paliers de la matrice : le palier 0 est valide, donc on
+   passe par une sentinelle -1 plutôt que par un test de vérité. #}
 
 {% macro num(v) %}
 {%- set text = v | default(value="—") -%}
@@ -17,6 +20,24 @@
 <td class="num {% if text == '—' %}num--unknown{% endif %}">{{ text }}</td>
 {%- endmacro cell %}
 
+{# Cellule de matrice : teintée selon son palier de magnitude. Un inconnu et un
+   zéro constaté restent tous deux NON teintés — la couleur ne porte que la
+   magnitude, c'est le texte qui porte la distinction. #}
+{% macro tinted(v, level) %}
+{%- set text = v | default(value="—") -%}
+{%- set lv = level | default(value=-1) -%}
+<td class="cell{% if lv != -1 %} cell--{{ lv }}{% endif %}{% if text == '—' %} num--unknown{% endif %}">{{ text }}</td>
+{%- endmacro tinted %}
+
+{# Cellule avec barre de magnitude. Longueur strictement proportionnelle, et
+   une seule couleur pour toutes les barres : les teinter selon leur valeur
+   doublerait l'encodage de la longueur. #}
+{% macro barred(v, bar) %}
+{%- set text = v | default(value="—") -%}
+{%- set width = bar | default(value=0) -%}
+<td class="bar {% if text == '—' %}num--unknown{% endif %}" style="--v:{{ width }}"><span>{{ text }}</span></td>
+{%- endmacro barred %}
+
 {% macro stat(label, v, note) %}
 <li class="stat">
   <span class="stat__value">{{ self::num(v=v) }}</span>
@@ -24,3 +45,15 @@
   {%- if note %}<span class="stat__note">{{ note }}</span>{% endif -%}
 </li>
 {%- endmacro stat %}
+
+{# Légende d'échelle. Une rampe sans échelle ne se lit pas. #}
+{% macro scale(labels) %}
+{% if labels | length > 0 %}
+<p class="scale">
+  <span>Chasses&nbsp;:</span>
+  {% for label in labels %}
+  <span><span class="scale__swatch" style="background: var(--lv-{{ loop.index0 }})"></span>{{ label }}</span>
+  {% endfor %}
+</p>
+{% endif %}
+{%- endmacro scale %}

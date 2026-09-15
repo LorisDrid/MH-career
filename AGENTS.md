@@ -239,7 +239,7 @@ MH-career/
 │   └── fixtures/data/         ← univers fictif, jamais de vraies stats
 ├── content/                   ← markdown Zola (prose FR)
 ├── templates/                 ← Tera
-├── static/                    ← css, images
+├── static/                    ← css, polices (woff2)
 ├── docs/
 │   ├── DATA-MODEL.md
 │   └── CAPTURE-CHECKLIST.md
@@ -332,9 +332,49 @@ classement par jeu, chaque jeu le fait déjà ; ce qu'aucun jeu ne peut dire, c'
 
 ### CSS
 
-- Pas de framework. Propriétés personnalisées pour la palette, thème clair et sombre
-  via `prefers-color-scheme`.
-- Mobile d'abord. Les tableaux larges vont dans un conteneur `overflow-x: auto`.
+- Pas de framework, aucune ressource externe, aucun JavaScript. Un seul fichier,
+  `static/css/style.css`.
+- **Thème sombre unique.** Un thème réversible oblige chaque couleur à tenir sur
+  deux fonds, ce qui interdit les profondeurs et les teintes saturées dont la
+  matrice a besoin. Le choix inverse — `prefers-color-scheme` — aurait respecté la
+  préférence système, au prix de la seule chose que ce site met en avant.
+- Palette en propriétés personnalisées sur `:root`. Les ratios de contraste sont
+  notés en commentaire à côté des valeurs : **ils se recalculent, ils ne se jugent
+  pas à l'œil.** Toute modification de la palette passe d'abord par le calcul.
+- **Une seule teinte pour la donnée.** La magnitude se code sur l'intensité d'une
+  rampe cuivre à cinq paliers (`--lv-0` à `--lv-4`), jamais sur la teinte : un
+  arc-en-ciel n'a pas d'ordre perceptif. Au dernier palier le texte bascule en
+  sombre, l'os n'y tenant plus le contraste.
+- **La rampe ne s'applique qu'à des quantités.** Jamais à une catégorie nominale
+  (plateforme, type d'arme, espèce) : elle y suggérerait un ordre qui n'existe pas.
+- Les barres de magnitude sont toutes de la même couleur. Les teinter selon leur
+  valeur doublerait l'encodage de la longueur et gâcherait le seul canal libre.
+- `tabular-nums` sur les colonnes de chiffres, qui s'alignent verticalement ;
+  `proportional-nums` sur les grands chiffres isolés, où le tabulaire paraît lâche.
+- Aucune valeur lisible au seul survol : tout chiffre est dans le texte du document.
+- Mobile d'abord. Les tableaux larges vont dans un conteneur `overflow-x: auto`, et
+  la colonne d'identité de la matrice reste collante pendant le défilement latéral.
+- Une seule animation d'entrée, échelonnée, désactivée sous
+  `prefers-reduced-motion`.
+
+### Polices
+
+Auto-hébergées dans `static/fonts/`, en `woff2`, avec `font-display: swap` et un
+repli système cohérent. Une police servie par un CDN ferait dépendre l'identité du
+site d'un tiers au moment de la visite ; l'auto-hébergement supprime cette
+dépendance, au prix de fichiers à déposer à la main — **l'agent ne les télécharge
+pas**, c'est un téléchargement de dépendance (§2.2).
+
+Noms attendus : `fraunces-600.woff2`, `fraunces-900.woff2`, `plex-sans-400.woff2`,
+`plex-sans-500.woff2`, `plex-sans-600.woff2`.
+
+### Traductions et formats d'affichage
+
+Le référentiel stocke des **identifiants stables** (`melee`, `2016-07`) : ils se
+trient, ils sont sans ambiguïté et ils ne supposent aucune langue. Leur forme
+lisible (« Mêlée », « juillet 2016 ») est un choix d'affichage et se calcule
+**en Python**, jamais dans le template — voir la règle « aucun calcul dans les
+templates ». Un template qui affiche une valeur brute du référentiel est un bug.
 
 ---
 
@@ -386,14 +426,22 @@ cinq jeux à moitié les disperse.
 `mh3u`, `mhgen`, `mhw`, `mhrise`. Le référentiel de monstres se complète au fil de
 l'eau. Phase longue et ingrate : l'étaler est un choix assumé, pas un retard.
 
-### Phase 4 — Vues croisées
+### Phase 4 — Vues croisées *(faite, en même temps que la phase 5)*
 
-Bestiaire cumulé, heatmap monstre × jeu, évolution des armes, timeline de carrière.
-Graphiques SVG. C'est ici que le projet devient autre chose qu'un tableur.
+Bestiaire cumulé, matrice monstre × jeu, barres de magnitude, frise de carrière.
 
-### Phase 5 — Polish et synchro Steam
+**Le module `tools/charts.py` initialement prévu n'a pas été écrit**, et ce n'est
+pas un report. Les formes dont ce site a besoin se rendent mieux en HTML stylé
+qu'en SVG : la matrice *est* le tableau, donc une cellule teintée est à la fois le
+graphique et sa version tabulaire — sélectionnable, cherchable et accessible par
+construction, sans étape de build supplémentaire. Le SVG redeviendrait le bon
+outil pour une courbe ou un nuage de points ; il n'y en a pas ici.
 
-Soin visuel, puis synchronisation Steam pour `mhwilds`.
+### Phase 5 — Polish *(faite)*, puis synchro Steam
+
+Refonte visuelle menée avec la phase 4, style et visualisations étant indissociables :
+refaire le CSS en laissant des tableaux bruts n'aurait rien changé au ressenti.
+Reste la synchronisation Steam pour `mhwilds`.
 
 **Contrainte de conception de la synchro** : 3DS, PS4 et Xbox Game Pass n'exposent
 aucune API gratuite exploitable. La saisie manuelle reste donc le chemin principal,
@@ -428,11 +476,16 @@ d'environnement — le script fonctionnerait tel quel ailleurs.
 `PYTHON_VERSION` n'est pas optionnel : `tomllib` exige Python ≥ 3.11, et
 `deploy.py` s'arrête avec un message explicite si la version est trop ancienne.
 
-**Aucune variable d'adresse n'est à renseigner.** `CF_PAGES_URL`, que Cloudflare
-documente, s'est révélée absente du runner de build : c'est donc `base_url` dans
-`config.toml` qui fait foi, et c'est préférable — une valeur versionnée et
-commentée vaut mieux qu'un réglage de tableau de bord. `SITE_BASE_URL` reste
-disponible comme surcharge si l'adresse du site change un jour.
+**Aucune variable d'adresse n'est à renseigner.** L'ordre de résolution est
+`SITE_BASE_URL`, puis `base_url` de `config.toml`.
+
+`CF_PAGES_URL` a été essayée puis **retirée de la chaîne**. Elle est bien fournie
+par le runner, mais elle vaut l'adresse du *déploiement courant*
+(`775015a0.mh-career.pages.dev`), pas l'adresse canonique du site : les liens et
+la feuille de style d'une mise en ligne se retrouvaient figés sur un déploiement
+particulier, et cassaient au suivant. Une valeur versionnée et commentée vaut
+mieux qu'une variable d'hébergeur dont le sens n'est pas celui qu'on suppose.
+`SITE_BASE_URL` reste la surcharge explicite si l'adresse change un jour.
 
 ### L'empreinte de Zola
 

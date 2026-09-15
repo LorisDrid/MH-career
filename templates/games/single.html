@@ -3,7 +3,7 @@
 {% block page_title %}{{ page.title }} — {{ config.title }}{% endblock page_title %}
 {% block content %}
 {% set data = load_data(path="data/generated/site.json") %}
-{# Acces par cle depuis le slug de page : l'indexation est faite cote Python
+{# Accès par clé depuis le slug de page : l'indexation est faite côté Python
    (games_by_id), pas par un filtrage dans le template. #}
 {% set game = data.games_by_id[page.slug] %}
 
@@ -11,17 +11,18 @@
 <p class="lede">
   {{ game.platform_name }}
   {%- if game.played_from %} · joué de {{ game.played_from }}{% endif %}
-  {%- if game.played_to %} à {{ game.played_to }}{% endif %}
+  {%- if game.played_to %} · jusqu'à {{ game.played_to }}{% endif %}
+  {%- if game.progress.title %} · « {{ game.progress.title }} »{% endif %}
 </p>
 
 <ul class="stat-grid">
   {{ fmt::stat(label="rang de chasseur", v=game.progress.hunter_rank, note="") }}
+  {{ fmt::stat(label="rang maître", v=game.progress.master_rank, note="") }}
   {{ fmt::stat(label="temps de jeu", v=game.progress.playtime_display,
                note=game.progress.playtime_note) }}
-  {{ fmt::stat(label="quêtes accomplies", v=game.progress.quests_total, note="") }}
+  {{ fmt::stat(label="quêtes", v=game.progress.quests_total, note="") }}
   {{ fmt::stat(label="chasses", v=game.total_hunted, note="") }}
   {{ fmt::stat(label="captures", v=game.total_captured, note="") }}
-  {{ fmt::stat(label="monstres relevés", v=game.monsters_recorded, note="") }}
 </ul>
 
 {% if not game.has_data %}
@@ -32,31 +33,32 @@
 {% endif %}
 
 {% if game.top_monsters | length > 0 %}
-<section>
-  <h2>Monstres les plus chassés</h2>
-  <div class="table-scroll">
-    <table>
-      <thead><tr><th scope="col">Monstre</th><th scope="col">Chasses</th></tr></thead>
-      <tbody>
-        {% for monster in game.top_monsters %}
-        <tr><th scope="row">{{ monster.name_fr }}</th>{{ fmt::cell(v=monster.hunted) }}</tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</section>
+<h2>Monstres les plus chassés</h2>
+<div class="table-scroll">
+  <table>
+    <thead>
+      <tr><th scope="col">Monstre</th><th scope="col" class="num">Chasses</th></tr>
+    </thead>
+    <tbody>
+      {% for monster in game.top_monsters %}
+      <tr>
+        <th scope="row">{{ monster.name_fr }}</th>
+        {{ fmt::barred(v=monster.hunted, bar=monster.bar) }}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endif %}
 
 {% if game.sources | length > 0 %}
-<section>
-  <h2>Sources</h2>
-  <ul class="sources">
-    {% for source in game.sources %}
-    <li><code>{{ source.kind }}</code> — relevé le {{ source.captured_on }}
-      {%- if source.note %} · {{ source.note }}{% endif %}</li>
-    {% endfor %}
-  </ul>
-</section>
+<h2>Sources</h2>
+<ul class="sources">
+  {% for source in game.sources %}
+  <li><code>{{ source.kind }}</code> — relevé le {{ source.captured_on }}
+    {%- if source.note %} · {{ source.note }}{% endif %}</li>
+  {% endfor %}
+</ul>
 {% endif %}
 
 {% if page.content %}

@@ -17,14 +17,17 @@
   Il se remplira au fur et à mesure de la saisie des carnets de chasseur.</p>
 </div>
 {% else %}
+
+{{ fmt::scale(labels=data.matrix_scale) }}
+
 <div class="table-scroll">
-  <table>
+  <table class="matrix">
     <thead>
       <tr>
         <th scope="col">Monstre</th>
-        <th scope="col">Total</th>
+        <th scope="col" class="num">Total</th>
         {% for game_id in data.matrix_games %}
-        <th scope="col">{{ data.games_by_id[game_id].short_title }}</th>
+        <th scope="col" class="num col">{{ data.games_by_id[game_id].short_title }}</th>
         {% endfor %}
       </tr>
     </thead>
@@ -37,14 +40,23 @@
           <span class="forms">{{ row.forms | length }} formes</span>
           {%- endif %}
         </th>
-        {{ fmt::cell(v=row.total_hunted) }}
+        {{ fmt::barred(v=row.total_hunted, bar=row.bar) }}
         {% for game_id in data.matrix_games %}
-        {{ fmt::cell(v=row.per_game[game_id]) }}
+        {{ fmt::tinted(v=row.per_game[game_id], level=row.per_game_level[game_id]) }}
         {% endfor %}
       </tr>
       {% endfor %}
     </tbody>
   </table>
+</div>
+
+<div class="notice notice--quiet">
+  <p>
+    Une cellule vide affiche « — » : le monstre n'apparaît pas dans le carnet de
+    ce jeu. Un <strong>0</strong> signifie qu'il y figure avec un compteur à
+    zéro. L'intensité de la teinte ne code que le nombre de chasses ; les deux
+    cas restent donc non teintés, et c'est le texte qui les distingue.
+  </p>
 </div>
 {% endif %}
 {% endblock content %}

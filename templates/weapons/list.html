@@ -6,14 +6,15 @@
 
 <h1>Armes</h1>
 <p class="lede">
-  Les 14 types d'armes de la licence, et leur usage jeu par jeu.
+  Les 14 types d'armes de la licence, plus le Chasseur Félyne propre à
+  Generations, et leur usage jeu par jeu.
 </p>
 
 <div class="notice notice--quiet">
   <p>
-    La colonne <em>score</em> est un classement, pas un total : la définition du
-    compteur d'usage varie d'un jeu à l'autre, donc additionner les valeurs
-    donne un ordre de préférence, pas une quantité comparable.
+    La colonne <strong>score</strong> est un classement, pas un total : la
+    définition du compteur d'usage varie d'un jeu à l'autre, donc additionner
+    les valeurs donne un ordre de préférence, pas une quantité comparable.
   </p>
 </div>
 
@@ -23,9 +24,9 @@
       <tr>
         <th scope="col">Arme</th>
         <th scope="col">Type</th>
-        <th scope="col">Score</th>
+        <th scope="col" class="num">Score</th>
         {% for game_id in data.matrix_games %}
-        <th scope="col">{{ data.games_by_id[game_id].short_title }}</th>
+        <th scope="col" class="num">{{ data.games_by_id[game_id].short_title }}</th>
         {% endfor %}
       </tr>
     </thead>
@@ -34,7 +35,7 @@
       <tr>
         <th scope="row">{{ weapon.name_fr | default(value=weapon.name_en) }}</th>
         <td>{{ weapon.category | default(value="—") }}</td>
-        {{ fmt::cell(v=weapon.usage_score) }}
+        {{ fmt::barred(v=weapon.usage_score, bar=weapon.bar) }}
         {% for game_id in data.matrix_games %}
         {{ fmt::cell(v=weapon.per_game[game_id]) }}
         {% endfor %}

@@ -23,7 +23,7 @@
     <dl class="card__stats">
       <dt>Temps de jeu</dt><dd>{{ fmt::num(v=game.progress.playtime_display) }}</dd>
       <dt>Chasses</dt><dd>{{ fmt::num(v=game.total_hunted) }}</dd>
-      <dt>Monstres relevés</dt><dd>{{ game.monsters_recorded }}</dd>
+      <dt>Monstres relevés</dt><dd>{{ fmt::num(v=game.monsters_recorded) }}</dd>
     </dl>
     {% if not game.has_data %}<p class="card__empty">Pas encore saisi</p>{% endif %}
   </li>

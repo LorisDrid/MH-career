@@ -1,0 +1,47 @@
+# Monster Hunter 3 Ultimate - releve du 2026-09-15.
+#
+# LACUNE ASSUMEE : le Journal monstre affiche "????" en guise de NOM sur cinq
+# lignes, avec des tailles et des compteurs bien reels (tailles 1201.20,
+# 1545.20, 1561.44, 1719.85 et 2237.20). Ces six chasses ne sont pas saisies,
+# faute de pouvoir les rattacher a un monstre. Le total ci-dessous est donc
+# volontairement inferieur de 6 a ce que la console affiche.
+
+game = "mh3u"
+
+[progress]
+hunter_name = "loris"
+title = "Chasseur à Marteau"
+# Libelle a l'ecran : "Rg". Interprete comme le rang de chasseur - a confirmer.
+hunter_rank = 1
+playtime_minutes = 8669
+playtime_precision = "minutes"
+
+# Ventilation de la Guild Card page 1/6. MH3U decoupe par village (Moga) et
+# port (Tanzia), la ou MH4U parlait de caravane et de grande salle.
+[progress.quests]
+moga_low = 179
+moga_high = 16
+tanzia_low = 18
+tanzia_high = 0
+tanzia_g = 0
+arena = 8
+
+[[sources]]
+kind = "guild_card"
+captured_on = "2026-09-15"
+note = "page 1/6 : nom, rang, ventilation des quetes (photo 20260915_122628)"
+
+[[sources]]
+kind = "guild_card"
+captured_on = "2026-09-15"
+note = "Utilisation des armes, onglet Tout (photo 20260915_122636)"
+
+[[sources]]
+kind = "hunting_log"
+captured_on = "2026-09-15"
+note = "Journal chasseur 3/6 : temps de jeu 144:29, derniere session 2025/08/22 (photo 20260915_122647)"
+
+[[sources]]
+kind = "hunter_notes"
+captured_on = "2026-09-15"
+note = "Journal monstre 5/6, vues Chasses et Capt (photos 20260915_122719 a 122814)"

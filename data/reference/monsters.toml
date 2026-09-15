@@ -183,3 +183,87 @@ name_fr = "Kirin"
 name_en = "Dah'ren Mohran"
 name_fr = "Dah'ren Mohran"
 # taille affichee ----.-- : monstre non mesurable
+
+# Ajoutes le 2026-09-15 depuis MH3U (Journal monstre, page 5/6).
+
+[monsters.great_baggi]
+name_en = "Great Baggi"
+name_fr = "Grand Baggi"
+
+[monsters.great_wroggi]
+name_en = "Great Wroggi"
+name_fr = "Grand Wroggi"
+
+[monsters.qurupeco]
+name_en = "Qurupeco"
+name_fr = "Qurupeco"
+
+[monsters.qurupeco_crimson]
+name_en = "Crimson Qurupeco"
+name_fr = "Qurupeco vermillon"
+base = "qurupeco"
+variant_type = "subspecies"  # a confirmer
+
+[monsters.arzuros]
+name_en = "Arzuros"
+name_fr = "Arzuros"
+
+[monsters.volvidon]
+name_en = "Volvidon"
+name_fr = "Volvidon"
+
+[monsters.barroth]
+name_en = "Barroth"
+name_fr = "Barroth"
+
+[monsters.uragaan]
+name_en = "Uragaan"
+name_fr = "Uragaan"
+
+[monsters.duramboros]
+name_en = "Duramboros"
+name_fr = "Duramboros"
+
+[monsters.royal_ludroth]
+name_en = "Royal Ludroth"
+name_fr = "Ludroth royal"
+
+[monsters.nibelsnarf]
+name_en = "Nibelsnarf"
+name_fr = "Nibelsnarf"
+
+[monsters.agnaktor]
+name_en = "Agnaktor"
+name_fr = "Agnaktor"
+
+[monsters.rathian_gold]
+name_en = "Gold Rathian"
+name_fr = "Rathian dorée"
+base = "rathian"
+variant_type = "rare_species"  # a confirmer
+
+[monsters.rathalos_silver]
+name_en = "Silver Rathalos"
+name_fr = "Rathalos argenté"
+base = "rathalos"
+variant_type = "rare_species"  # a confirmer
+
+[monsters.gigginox]
+name_en = "Gigginox"
+name_fr = "Gigginox"
+
+[monsters.barioth]
+name_en = "Barioth"
+name_fr = "Barioth"
+
+[monsters.diablos]
+name_en = "Diablos"
+name_fr = "Diablos"
+
+[monsters.gobul]
+name_en = "Gobul"
+name_fr = "Gobul"
+
+[monsters.lagiacrus]
+name_en = "Lagiacrus"
+name_fr = "Lagiacrus"

@@ -99,25 +99,18 @@ def fetch_zola(destination: Path) -> Path:
 def site_base_url() -> str | None:
     """URL du site, lue dans l'environnement de construction.
 
-    Deux sources, dans cet ordre :
+    Une seule source : SITE_BASE_URL, surcharge explicite que l'on renseigne
+    chez l'hebergeur. Absente, Zola retombe sur config.toml.
 
-    - SITE_BASE_URL, que l'on renseigne soi-meme chez l'hebergeur. C'est
-      l'adresse canonique, et elle prime : CF_PAGES_URL designe le deploiement
-      COURANT, ce qui convient aux previsualisations mais ferait pointer les
-      liens de production vers un deploiement particulier.
-    - CF_PAGES_URL, que Cloudflare documente mais qui s'est averee ABSENTE du
-      runner de build utilise le 2026-09-15. Conservee comme repli au cas ou,
-      sans etre le mecanisme sur lequel on compte.
-
-    En pratique, c'est donc config.toml qui fait foi, et c'est tres bien ainsi :
-    une valeur versionnee et commentee vaut mieux qu'une variable d'un
-    tableau de bord. En local comme en deploiement, la meme source.
+    CF_PAGES_URL a ete essayee puis RETIREE : Cloudflare la renseigne de
+    maniere intermittente, et elle designe le deploiement COURANT. Le site
+    deploye le 2026-09-15 s'est ainsi retrouve avec tous ses liens absolus
+    pointant vers 775015a0.mh-career.pages.dev au lieu de son adresse
+    canonique. Une valeur versionnee dans config.toml vaut mieux qu'une
+    variable d'environnement au contenu changeant.
     """
-    for variable in ("SITE_BASE_URL", "CF_PAGES_URL"):
-        value = os.environ.get(variable)
-        if value:
-            return value.rstrip("/")
-    return None
+    value = os.environ.get("SITE_BASE_URL")
+    return value.rstrip("/") if value else None
 
 
 def main() -> int:

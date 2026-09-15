@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% import "macros/fmt.html" as fmt %}
+{% block content %}
+{% set data = load_data(path="data/generated/site.json") %}
+
+<h1>Carrière de chasseur</h1>
+<p class="lede">
+  Ce que {{ data.totals.games }} jeux Monster Hunter savent de moi, mis bout à bout.
+</p>
+
+<ul class="stat-grid">
+  {{ fmt::stat(label="jeux de la collection", v=data.totals.games, note="") }}
+  {{ fmt::stat(label="temps de jeu cumulé", v=data.totals.playtime_display,
+               note=data.totals.playtime_precision) }}
+  {{ fmt::stat(label="chasses", v=data.totals.hunted, note="") }}
+  {{ fmt::stat(label="captures", v=data.totals.captured, note="") }}
+  {{ fmt::stat(label="monstres différents chassés", v=data.totals.distinct_monsters_hunted, note="") }}
+  {{ fmt::stat(label="quêtes accomplies", v=data.totals.quests_completed, note="") }}
+</ul>
+
+{% if data.totals.games_with_data == 0 %}
+<div class="notice">
+  <p>
+    <strong>Aucune statistique n'a encore été saisie.</strong>
+    La chaîne de génération fonctionne de bout en bout, mais les relevés
+    attendent la phase de capture : il faut d'abord photographier les Guild Cards
+    et carnets de chasseur, console en main.
+  </p>
+  <p>
+    Les tirets ci-dessus ne sont donc pas des zéros. C'est exactement la
+    distinction que ce site s'attache à préserver.
+  </p>
+</div>
+{% endif %}
+
+{% if data.timeline | length > 0 %}
+<section>
+  <h2>Chronologie</h2>
+  <ol class="timeline">
+    {% for event in data.timeline %}
+    <li class="timeline__item timeline__item--{{ event.kind }}">
+      <span class="timeline__date">{{ event.date }}</span>
+      <span class="timeline__label">{{ event.label }}</span>
+    </li>
+    {% endfor %}
+  </ol>
+</section>
+{% endif %}
+
+<section>
+  <h2>Les jeux</h2>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Jeu</th>
+          <th scope="col">Plateforme</th>
+          <th scope="col">Période</th>
+          <th scope="col">Temps de jeu</th>
+          <th scope="col">Chasses</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for game in data.games %}
+        <tr>
+          <th scope="row">
+            <a href="{{ get_url(path='@/games/' ~ game.id ~ '.md') | safe }}">{{ game.short_title }}</a>
+          </th>
+          <td>{{ game.platform_name }}</td>
+          {{ fmt::cell(v=game.played_from) }}
+          {{ fmt::cell(v=game.progress.playtime_display) }}
+          {{ fmt::cell(v=game.total_hunted) }}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock content %}

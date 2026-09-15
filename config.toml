@@ -1,0 +1,16 @@
+# Configuration Zola.
+#
+# base_url DOIT inclure le sous-chemin /MH-career : le site est servi sous
+# https://lorisdrid.github.io/MH-career/ et non a la racine du domaine. Sans ce
+# sous-chemin, tous les liens internes et le CSS pointeraient vers la racine et
+# le site s'afficherait nu. L'erreur ne se voit pas en local avec `zola serve`.
+base_url = "https://lorisdrid.github.io/MH-career"
+
+title = "MH-career"
+description = "Archive personnelle de mes statistiques Monster Hunter"
+default_language = "fr"
+
+compile_sass = false
+build_search_index = false
+generate_feeds = false
+taxonomies = []

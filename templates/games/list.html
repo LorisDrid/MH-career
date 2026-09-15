@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% import "macros/fmt.html" as fmt %}
+{% block page_title %}Jeux — {{ config.title }}{% endblock page_title %}
+{% block content %}
+{% set data = load_data(path="data/generated/site.json") %}
+
+<h1>Jeux</h1>
+<p class="lede">
+  Un jeu par fiche. Chaque fiche n'affiche que les compteurs que ce titre
+  expose réellement.
+</p>
+
+<ul class="card-grid">
+  {% for game in data.games %}
+  <li class="card">
+    <h2 class="card__title">
+      <a href="{{ get_url(path='@/games/' ~ game.id ~ '.md') | safe }}">{{ game.title }}</a>
+    </h2>
+    <p class="card__meta">
+      {{ game.platform_name }}
+      {%- if game.generation %} · génération {{ game.generation }}{% endif %}
+    </p>
+    <dl class="card__stats">
+      <dt>Temps de jeu</dt><dd>{{ fmt::num(v=game.progress.playtime_display) }}</dd>
+      <dt>Chasses</dt><dd>{{ fmt::num(v=game.total_hunted) }}</dd>
+      <dt>Monstres relevés</dt><dd>{{ game.monsters_recorded }}</dd>
+    </dl>
+    {% if not game.has_data %}<p class="card__empty">Pas encore saisi</p>{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% endblock content %}

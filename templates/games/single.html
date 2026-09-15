@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% import "macros/fmt.html" as fmt %}
+{% block page_title %}{{ page.title }} — {{ config.title }}{% endblock page_title %}
+{% block content %}
+{% set data = load_data(path="data/generated/site.json") %}
+{# Acces par cle depuis le slug de page : l'indexation est faite cote Python
+   (games_by_id), pas par un filtrage dans le template. #}
+{% set game = data.games_by_id[page.slug] %}
+
+<h1>{{ game.title }}</h1>
+<p class="lede">
+  {{ game.platform_name }}
+  {%- if game.played_from %} · joué de {{ game.played_from }}{% endif %}
+  {%- if game.played_to %} à {{ game.played_to }}{% endif %}
+</p>
+
+<ul class="stat-grid">
+  {{ fmt::stat(label="rang de chasseur", v=game.progress.hunter_rank, note="") }}
+  {{ fmt::stat(label="temps de jeu", v=game.progress.playtime_display,
+               note=game.progress.playtime_precision) }}
+  {{ fmt::stat(label="quêtes accomplies", v=game.progress.quests_completed, note="") }}
+  {{ fmt::stat(label="chasses", v=game.total_hunted, note="") }}
+  {{ fmt::stat(label="captures", v=game.total_captured, note="") }}
+  {{ fmt::stat(label="monstres relevés", v=game.monsters_recorded, note="") }}
+</ul>
+
+{% if not game.has_data %}
+<div class="notice">
+  <p><strong>Ce jeu n'a pas encore été saisi.</strong>
+  Ses relevés attendent la phase de capture.</p>
+</div>
+{% endif %}
+
+{% if game.top_monsters | length > 0 %}
+<section>
+  <h2>Monstres les plus chassés</h2>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th scope="col">Monstre</th><th scope="col">Chasses</th></tr></thead>
+      <tbody>
+        {% for monster in game.top_monsters %}
+        <tr><th scope="row">{{ monster.name_fr }}</th>{{ fmt::cell(v=monster.hunted) }}</tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}
+
+{% if game.sources | length > 0 %}
+<section>
+  <h2>Sources</h2>
+  <ul class="sources">
+    {% for source in game.sources %}
+    <li><code>{{ source.kind }}</code> — relevé le {{ source.captured_on }}
+      {%- if source.note %} · {{ source.note }}{% endif %}</li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+{% if page.content %}
+<article class="prose">{{ page.content | safe }}</article>
+{% endif %}
+{% endblock content %}

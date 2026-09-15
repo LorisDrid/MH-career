@@ -1,0 +1,26 @@
+{# Formatage des valeurs potentiellement inconnues.
+
+   Un seul endroit a corriger si la convention evolue.
+
+   Rappel du piege (AGENTS.md 9) : dans Tera, null ET 0 sont falsy, donc
+   {% if valeur %} afficherait un tiret sur un zero pourtant constate. Le
+   filtre `default` est le seul moyen correct de les distinguer, et c'est
+   sur son resultat qu'on decide aussi de la classe CSS. #}
+
+{% macro num(v) %}
+{%- set text = v | default(value="—") -%}
+<span class="v {% if text == '—' %}v--unknown{% else %}v--known{% endif %}">{{ text }}</span>
+{%- endmacro num %}
+
+{% macro cell(v) %}
+{%- set text = v | default(value="—") -%}
+<td class="num {% if text == '—' %}num--unknown{% endif %}">{{ text }}</td>
+{%- endmacro cell %}
+
+{% macro stat(label, v, note) %}
+<li class="stat">
+  <span class="stat__value">{{ self::num(v=v) }}</span>
+  <span class="stat__label">{{ label }}</span>
+  {%- if note %}<span class="stat__note">{{ note }}</span>{% endif -%}
+</li>
+{%- endmacro stat %}

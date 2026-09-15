@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block page_title %}{{ config.title }}{% endblock page_title %}</title>
+  <meta name="description" content="{{ config.description }}">
+  <link rel="stylesheet" href="{{ get_url(path='css/style.css') | safe }}">
+</head>
+<body>
+  <a class="skip" href="#contenu">Aller au contenu</a>
+
+  <header class="masthead">
+    <a class="masthead__brand" href="{{ get_url(path='@/_index.md') | safe }}">MH-career</a>
+    <nav class="masthead__nav" aria-label="Navigation principale">
+      <a href="{{ get_url(path='@/games/_index.md') | safe }}">Jeux</a>
+      <a href="{{ get_url(path='@/bestiary/_index.md') | safe }}">Bestiaire</a>
+      <a href="{{ get_url(path='@/weapons/_index.md') | safe }}">Armes</a>
+      <a href="{{ get_url(path='@/about.md') | safe }}">Méthodologie</a>
+    </nav>
+  </header>
+
+  <main class="page" id="contenu">
+    {% block content %}{% endblock content %}
+  </main>
+
+  <footer class="colophon">
+    <p>
+      Archive personnelle. Les chiffres sont relevés sur les écrans des jeux :
+      <strong>—</strong> signifie inconnu, <strong>0</strong> signifie zéro constaté.
+      <a href="{{ get_url(path='@/about.md') | safe }}">Méthodologie</a>.
+    </p>
+  </footer>
+</body>
+</html>

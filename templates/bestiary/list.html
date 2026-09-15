@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% import "macros/fmt.html" as fmt %}
+{% block page_title %}Bestiaire — {{ config.title }}{% endblock page_title %}
+{% block content %}
+{% set data = load_data(path="data/generated/site.json") %}
+
+<h1>Bestiaire</h1>
+<p class="lede">
+  Tous les monstres chassés, toutes licences confondues. Les sous-espèces et
+  variantes sont regroupées sous leur forme de base : c'est ce regroupement qui
+  permet de répondre à « combien de Rathalos au total ».
+</p>
+
+{% if data.bestiary | length == 0 %}
+<div class="notice">
+  <p><strong>Le bestiaire est vide.</strong>
+  Il se remplira au fur et à mesure de la saisie des carnets de chasseur.</p>
+</div>
+{% else %}
+<div class="table-scroll">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Monstre</th>
+        <th scope="col">Total</th>
+        {% for game_id in data.matrix_games %}
+        <th scope="col">{{ data.games_by_id[game_id].short_title }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in data.bestiary %}
+      <tr>
+        <th scope="row">
+          {{ row.name_fr }}
+          {%- if row.forms | length > 1 %}
+          <span class="forms">{{ row.forms | length }} formes</span>
+          {%- endif %}
+        </th>
+        {{ fmt::cell(v=row.total_hunted) }}
+        {% for game_id in data.matrix_games %}
+        {{ fmt::cell(v=row.per_game[game_id]) }}
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+{% endblock content %}

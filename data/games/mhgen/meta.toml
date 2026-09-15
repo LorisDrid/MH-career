@@ -1,0 +1,42 @@
+# Monster Hunter Generations (3DS) - releve du 2026-09-15.
+#
+# Attention : il s'agit bien de Generations et non de Generations Ultimate.
+# La console visible sur les photos est une 3DS, et le Chasseur Felyne figure
+# dans l'histogramme d'utilisation des armes.
+
+game = "mhgen"
+
+[progress]
+hunter_name = "loris kill"
+hunter_rank = 3
+playtime_minutes = 6615
+playtime_precision = "minutes"
+
+# Ventilation de la Guild Card 1/7. Generations decoupe par village et
+# Grand Camp, avec une categorie de licence speciale qui lui est propre.
+[progress.quests]
+village = 122
+gd_camp_low = 102
+gd_camp_high = 0
+special_licence = 1
+arena = 0
+
+[[sources]]
+kind = "guild_card"
+captured_on = "2026-09-15"
+note = "page 1/7 : nom, RC 3, ventilation des quetes (photo 20260915_130024)"
+
+[[sources]]
+kind = "guild_card"
+captured_on = "2026-09-15"
+note = "page 3/7 Utilisation des armes, onglet Tout (photo 20260915_130100)"
+
+[[sources]]
+kind = "hunting_log"
+captured_on = "2026-09-15"
+note = "Journal de chasse : temps de jeu 110:15, derniere session 2018/8/21 (photo 20260915_130109)"
+
+[[sources]]
+kind = "hunter_notes"
+captured_on = "2026-09-15"
+note = "Bestiaire 6/7, vues Chasses et Captures (photos 20260915_130126 a 130216)"

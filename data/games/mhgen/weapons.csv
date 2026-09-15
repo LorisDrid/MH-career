@@ -1,0 +1,16 @@
+weapon_id,uses,notes
+great_sword,41,
+long_sword,75,
+sword_and_shield,46,
+dual_blades,0,
+hammer,1,
+hunting_horn,0,
+lance,0,
+gunlance,0,
+switch_axe,56,valeur confirmee par l'utilisateur malgre l'ecart avec les autres jeux
+charge_blade,10,
+insect_glaive,0,
+light_bowgun,1,
+heavy_bowgun,0,
+bow,0,
+prowler,,barre visible donc non nulle, mais compteur illisible sur la photo

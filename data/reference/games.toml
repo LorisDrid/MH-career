@@ -35,6 +35,8 @@ short_title = "Generations"
 platform = "nintendo_3ds"
 generation = 4
 status = "finished"
+# Derniere session datee par le Journal de chasse (2018/8/21).
+played_to = "2018-08"
 
 [games.mhw]
 title = "Monster Hunter: World"

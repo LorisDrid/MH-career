@@ -267,3 +267,63 @@ name_fr = "Gobul"
 [monsters.lagiacrus]
 name_en = "Lagiacrus"
 name_fr = "Lagiacrus"
+
+# Ajoutes le 2026-09-15 depuis Generations (Bestiaire, page 6/7).
+
+[monsters.great_maccao]
+name_en = "Great Maccao"
+name_fr = "Grand Maccao"
+
+[monsters.bulldrome]
+name_en = "Bulldrome"
+name_fr = "Bulldrome"
+
+[monsters.arzuros_redhelm]
+name_en = "Redhelm Arzuros"
+name_fr = "Arzuros Crâne-ardent"
+base = "arzuros"
+variant_type = "deviant"
+
+[monsters.malfestio]
+name_en = "Malfestio"
+name_fr = "Malfestio"
+
+[monsters.blangonga]
+name_en = "Blangonga"
+name_fr = "Blangonga"
+
+[monsters.shogun_ceanataur]
+name_en = "Shogun Ceanataur"
+name_fr = "Ceanataur Shogun"
+
+[monsters.nargacuga]
+name_en = "Nargacuga"
+name_fr = "Nargacuga"
+
+[monsters.mizutsune]
+name_en = "Mizutsune"
+name_fr = "Mizutsune"
+
+[monsters.astalos]
+name_en = "Astalos"
+name_fr = "Astalos"
+
+[monsters.gammoth]
+name_en = "Gammoth"
+name_fr = "Gammoth"
+
+[monsters.glavenus]
+name_en = "Glavenus"
+name_fr = "Glavenus"
+
+[monsters.seregios]
+name_en = "Seregios"
+name_fr = "Seregios"
+
+[monsters.kushala_daora]
+name_en = "Kushala Daora"
+name_fr = "Kushala Daora"
+
+[monsters.chameleos]
+name_en = "Chameleos"
+name_fr = "Chameleos"

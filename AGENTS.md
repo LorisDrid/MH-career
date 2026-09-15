@@ -424,21 +424,26 @@ d'environnement — le script fonctionnerait tel quel ailleurs.
 | Build output directory | `public` |
 | Root directory | `/` |
 | Variable `PYTHON_VERSION` | `3.12` |
-| Variable `SITE_BASE_URL` | l'adresse canonique du site |
 
 `PYTHON_VERSION` n'est pas optionnel : `tomllib` exige Python ≥ 3.11, et
 `deploy.py` s'arrête avec un message explicite si la version est trop ancienne.
 
-`SITE_BASE_URL` prime sur `CF_PAGES_URL`, que Cloudflare fournit mais qui
-désigne le **déploiement courant** : parfait pour une prévisualisation, mais les
-liens de production pointeraient alors vers un déploiement particulier.
+**Aucune variable d'adresse n'est à renseigner.** `CF_PAGES_URL`, que Cloudflare
+documente, s'est révélée absente du runner de build : c'est donc `base_url` dans
+`config.toml` qui fait foi, et c'est préférable — une valeur versionnée et
+commentée vaut mieux qu'un réglage de tableau de bord. `SITE_BASE_URL` reste
+disponible comme surcharge si l'adresse du site change un jour.
 
 ### L'empreinte de Zola
 
-Tant que `ZOLA_SHA256` est vide dans `tools/deploy.py`, le téléchargement n'est
-pas vérifié et un avertissement le signale dans le journal — l'absence de
-contrôle reste visible au lieu d'être silencieuse. La valeur se relève dans le
-journal du premier déploiement, puis se fige dans le fichier.
+`ZOLA_SHA256` est figée dans `tools/deploy.py` depuis le premier déploiement du
+2026-09-15 : toute modification de l'archive fait désormais échouer le build.
+Si la valeur était vidée, le téléchargement ne serait plus vérifié mais un
+avertissement le signalerait — l'absence de contrôle reste visible au lieu
+d'être silencieuse.
+
+Au changement de version de Zola, vider l'empreinte, déployer une fois, relever
+la nouvelle valeur dans le journal et la figer.
 
 ### Ce que la CI fait, et ne fait pas
 

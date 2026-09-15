@@ -31,14 +31,26 @@ from tools.loaders import repo_root
 
 ZOLA_VERSION = "0.22.1"
 
-# Empreinte de l'archive, a renseigner apres le premier deploiement : elle est
-# affichee dans le journal de build. Tant qu'elle est vide, le telechargement
-# n'est pas verifie et un avertissement le signale — l'absence de controle
-# reste ainsi visible au lieu d'etre silencieuse.
-ZOLA_SHA256 = ""
+# Empreinte relevee dans le journal du premier deploiement (2026-09-15). Toute
+# modification ulterieure de l'archive fera desormais echouer le build.
+# Si elle etait videe, le telechargement ne serait plus verifie mais un
+# avertissement le signalerait : l'absence de controle reste visible.
+ZOLA_SHA256 = "0ca09aa40376aaa9ddfb512ff9ad963262ef95edb0d0f2d5ec6961b6f5cf22ef"
 
 ARCHIVE = f"zola-v{ZOLA_VERSION}-x86_64-unknown-linux-gnu.tar.gz"
 URL = f"https://github.com/getzola/zola/releases/download/v{ZOLA_VERSION}/{ARCHIVE}"
+
+
+def unbuffer_output() -> None:
+    """Force l'ecriture ligne par ligne.
+
+    Hors terminal, Python bufferise sa sortie par blocs alors que les
+    sous-processus ecrivent directement. Dans le journal du premier
+    deploiement, les messages de Zola apparaissaient ainsi AVANT ceux qui
+    annoncaient son telechargement. Le journal etant la seule surface de
+    diagnostic d'un deploiement, son ordre doit etre fidele.
+    """
+    sys.stdout.reconfigure(line_buffering=True)
 
 
 def check_python() -> None:
@@ -93,9 +105,13 @@ def site_base_url() -> str | None:
       l'adresse canonique, et elle prime : CF_PAGES_URL designe le deploiement
       COURANT, ce qui convient aux previsualisations mais ferait pointer les
       liens de production vers un deploiement particulier.
-    - CF_PAGES_URL, fournie par Cloudflare Pages, comme repli raisonnable.
+    - CF_PAGES_URL, que Cloudflare documente mais qui s'est averee ABSENTE du
+      runner de build utilise le 2026-09-15. Conservee comme repli au cas ou,
+      sans etre le mecanisme sur lequel on compte.
 
-    En local, les deux sont absentes et Zola retombe sur config.toml.
+    En pratique, c'est donc config.toml qui fait foi, et c'est tres bien ainsi :
+    une valeur versionnee et commentee vaut mieux qu'une variable d'un
+    tableau de bord. En local comme en deploiement, la meme source.
     """
     for variable in ("SITE_BASE_URL", "CF_PAGES_URL"):
         value = os.environ.get(variable)
@@ -105,6 +121,7 @@ def site_base_url() -> str | None:
 
 
 def main() -> int:
+    unbuffer_output()
     check_python()
     root = repo_root()
 

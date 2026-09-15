@@ -174,13 +174,22 @@ l'affichage, on l'ajoute à `site.json`, on ne la recalcule pas côté rendu.
 ## 5. Commandes
 
 ```bash
-python tools/build.py             # valide, agrège, génère data/generated/
-python tools/build.py --check     # validation seule, sortie non nulle si erreur
-python -m unittest discover tests # tests unitaires (stdlib)
-zola check                        # liens et templates
-zola build                        # génère public/
-zola serve                        # serveur de dev avec live-reload
+python -m tools.build                        # valide, agrège, génère data/generated/
+python -m tools.build --check                # validation seule, sortie non nulle si erreur
+python -m unittest discover -s tests -t .    # tests unitaires (stdlib)
+zola check                                   # liens et templates
+zola build                                   # génère public/
+zola serve                                   # serveur de dev avec live-reload
 ```
+
+Le pipeline se lance **en module** (`-m`) et non en script : `python tools/build.py`
+placerait `tools/` sur le `sys.path` au lieu de la racine, et les imports internes
+échoueraient. Pour la même raison, `unittest` a besoin de `-t .` afin que le paquet
+`tools` reste importable depuis le dossier de tests.
+
+`zola build` exige que `data/generated/site.json` existe : lancer `python -m tools.build`
+d'abord. Une donnée manquante fait échouer le build avec un code non nul plutôt que
+de déployer un site vide — comportement vérifié, voir §10.
 
 Aucune de ces commandes n'invoque de gestionnaire de paquets, et toutes sont
 exécutables par l'agent. C'était le critère de sélection de la stack.
@@ -211,14 +220,20 @@ MH-career/
 │       ├── site.json
 │       └── charts/*.svg
 ├── tools/                     ← Python, stdlib uniquement
-│   ├── build.py               ← point d'entrée
+│   ├── __init__.py            ← indispensable à l'exécution en `-m`
+│   ├── build.py               ← point d'entrée (CLI)
 │   ├── model.py               ← dataclasses du domaine
-│   ├── loaders.py             ← lecture TOML/CSV
+│   ├── report.py              ← collecte des problèmes de validation
+│   ├── loaders.py             ← lecture TOML/CSV, avec numéros de ligne
 │   ├── validate.py            ← contrôles d'intégrité
 │   ├── aggregate.py           ← calculs inter-jeux
-│   └── charts.py              ← rendu SVG
+│   └── charts.py              ← rendu SVG (phase 4, pas encore écrit)
 ├── tests/
-│   └── fixtures/              ← données fictives, jamais de vraies stats
+│   ├── __init__.py
+│   ├── test_loaders.py
+│   ├── test_validate.py
+│   ├── test_aggregate.py
+│   └── fixtures/data/         ← univers fictif, jamais de vraies stats
 ├── content/                   ← markdown Zola (prose FR)
 ├── templates/                 ← Tera
 ├── static/                    ← css, images
@@ -297,6 +312,20 @@ classement par jeu, chaque jeu le fait déjà ; ce qu'aucun jeu ne peut dire, c'
 - Aucun calcul dans les templates (voir §4). Boucles et conditions d'affichage seulement.
 - Macros dans `templates/macros/` pour les éléments répétés (carte de stat, tableau).
 - HTML sémantique. Les tableaux de données sont des `<table>` avec `<th scope>`.
+- **Inconnu contre zéro : jamais `{% if %}` sur une valeur numérique.**
+
+  Dans Tera, `null` **et** `0` sont falsy. `{% if hunted %}{{ hunted }}{% else %}—{% endif %}`
+  afficherait donc « — » sur un zéro constaté, ce qui détruit silencieusement la
+  distinction qui fonde tout le modèle de données. Utiliser exclusivement le filtre
+  `default` :
+
+  ```
+  {{ hunted | default(value="—") }}
+  ```
+
+  Comportement vérifié sur Zola 0.22.1 : `null → —`, `0 → 0`, clé absente `→ —`.
+  Python peut donc émettre indifféremment `null` ou omettre la clé ; les deux se
+  rendent correctement.
 
 ### CSS
 
@@ -327,12 +356,21 @@ Objectif : la chaîne complète tourne de bout en bout avant qu'il y ait la moin
 donnée réelle. Déboguer un pipeline et saisir des données sont deux activités
 distinctes ; les mener en parallèle rend les deux plus difficiles.
 
-Contrôle de faisabilité à faire **en premier**, avant tout autre code :
-- `load_data(path="data/generated/site.json")` fonctionne dans un Zola minimal ;
-- `load_data(..., format="plain")` permet bien d'inliner un SVG dans un template.
+#### Contrôle de faisabilité — ✅ validé sur Zola 0.22.1
 
-Ces deux points conditionnent tout le contrat Python↔Zola. S'ils échouent, on
-révise la §4 avant d'aller plus loin.
+Le contrat Python↔Zola de la §4 a été vérifié sur une maquette jetable avant tout
+code de production :
+
+| Vérification | Résultat |
+|---|---|
+| `load_data(path="…/site.json")`, accès imbriqué et boucles | fonctionne |
+| `load_data(…, format="plain")` pour inliner un SVG | fonctionne, contenu verbatim |
+| Fichier de données absent | **build en échec, code de sortie 1** |
+| Distinction `null` / `0` via `\| default(value="—")` | correcte (voir §9) |
+
+Le troisième point est celui qui compte pour la CI : une donnée manquante casse le
+build au lieu de déployer un site vide. Aucun garde-fou supplémentaire n'est donc
+nécessaire côté workflow.
 
 ### Phase 2 — Un jeu complet
 
@@ -369,7 +407,7 @@ GitHub Pages via GitHub Actions, sur `push` vers `main` :
 
 1. `actions/checkout`
 2. `actions/setup-python` (3.12) — **aucune installation de dépendance nécessaire**
-3. `python tools/build.py`
+3. `python -m tools.build`
 4. Installation du binaire Zola, **version épinglée** (`0.22.1`)
 5. `zola build`
 6. `actions/upload-pages-artifact` + `actions/deploy-pages`
@@ -388,8 +426,8 @@ se voit pas en local avec `zola serve`.
 
 Une tâche n'est terminée que si :
 
-- [ ] `python tools/build.py --check` sort en 0
-- [ ] `python -m unittest discover tests` est vert
+- [ ] `python -m tools.build --check` sort en 0
+- [ ] `python -m unittest discover -s tests -t .` est vert
 - [ ] `zola build` passe sans warning
 - [ ] toute donnée ajoutée référence une source dans `[[sources]]`
 - [ ] aucune valeur inventée, aucun `0` substitué à un inconnu
@@ -423,3 +461,16 @@ docs: add AGENTS.md, data model and capture checklist
 ```
 
 Messages en anglais, impératif présent, pas de point final.
+
+### Découpage en plusieurs commits
+
+Dès que l'agent propose **plus d'un commit**, il donne pour chacun la commande
+`git add` correspondante, dans l'ordre d'application. Un seul commit proposé
+implique `git add .`, inutile de le préciser.
+
+Sans cela, l'utilisateur devrait reconstituer lui-même quel fichier va dans quel
+commit, ce qui annule le bénéfice du découpage.
+
+Avant de proposer, vérifier que l'union des `git add` couvre tous les fichiers
+modifiés, qu'aucun n'apparaît dans deux commits, et que l'ordre est cohérent —
+par exemple `.gitignore` avant les fichiers qu'il protège.

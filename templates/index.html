@@ -1,76 +1,47 @@
 {% extends "base.html" %}
 {% import "macros/fmt.html" as fmt %}
+{% import "macros/games.html" as cards %}
 {% block content %}
 {% set data = load_data(path="data/generated/site.json") %}
-
-<h1>Carrière<br>de chasseur</h1>
-<p class="lede">
-  Ce que {{ data.totals.games }} jeux Monster Hunter savent de moi, mis bout à
-  bout — et ce qu'aucun d'entre eux ne peut dire seul.
-</p>
-
-<ul class="stat-grid">
-  {{ fmt::stat(label="temps de jeu", v=data.totals.playtime_display,
-               note=data.totals.playtime_note) }}
-  {{ fmt::stat(label="chasses", v=data.totals.hunted, note="") }}
-  {{ fmt::stat(label="captures", v=data.totals.captured, note="") }}
-  {{ fmt::stat(label="monstres différents", v=data.totals.distinct_monsters_hunted, note="") }}
-  {{ fmt::stat(label="quêtes accomplies", v=data.totals.quests_total, note="") }}
-  {{ fmt::stat(label="jeux de la collection", v=data.totals.games, note="") }}
-</ul>
-
+<section class="career-hero" aria-labelledby="career-title">
+  <div class="career-hero__art" aria-hidden="true"></div>
+  <div class="career-hero__content">
+    <p class="eyebrow">Monster Hunter <span> / </span> Carnet de guilde</p>
+    <h1 id="career-title">Une vie<br>de <em>chasse.</em></h1>
+    <p class="hero-intro">Des premières quêtes aux derniers dragons.<br>Mes jeux, mes armes, mes chasses. Une seule carrière.</p>
+    <a class="guild-button" href="#collection">Ouvrir le carnet <span aria-hidden="true">↗</span></a>
+  </div>
+  <p class="hero-caption">Le ciel appartient au Rathalos.</p>
+</section>
+<section class="career-record" aria-label="Bilan de carrière">
+  <div class="record-heading"><span class="eyebrow">Le tableau de chasse</span><span>{{ data.totals.games_with_data }} jeux avec des relevés / {{ data.totals.games }} dans la collection</span></div>
+  <ul class="stat-grid stat-grid--career">
+    {{ fmt::stat(label="temps sur le terrain", v=data.totals.playtime_display, note=data.totals.playtime_note) }}
+    {{ fmt::stat(label="monstres chassés", v=data.totals.hunted, note="total des relevés") }}
+    {{ fmt::stat(label="captures", v=data.totals.captured, note="") }}
+    {{ fmt::stat(label="monstres différents", v=data.totals.distinct_monsters_hunted, note="dans les relevés") }}
+    {{ fmt::stat(label="quêtes accomplies", v=data.totals.quests_total, note="") }}
+  </ul>
+</section>
 {% if data.totals.games_with_data == 0 %}
-<div class="notice">
-  <p>
-    <strong>Aucune statistique n'a encore été saisie.</strong>
-    La chaîne de génération fonctionne de bout en bout, mais les relevés
-    attendent la phase de capture.
-  </p>
-  <p>
-    Les tirets ci-dessus ne sont donc pas des zéros. C'est exactement la
-    distinction que ce site s'attache à préserver.
-  </p>
-</div>
+<div class="notice"><p><strong>Le carnet attend ses premiers relevés.</strong> Les compteurs inconnus sont affichés avec un tiret.</p></div>
 {% endif %}
-
+<section id="collection" aria-labelledby="collection-title">
+  <div class="section-heading"><div><p class="eyebrow">Les terres parcourues</p><h2 id="collection-title">Chaque jeu, un chapitre.</h2></div><a class="text-link" href="{{ get_url(path='@/games/_index.md') | safe }}">Toutes les fiches <span aria-hidden="true">↗</span></a></div>
+  {{ cards::collection(games=data.games) }}
+</section>
+<section class="archive-paths" aria-label="Explorer les archives">
+  <a class="archive-path" href="{{ get_url(path='@/bestiary/_index.md') | safe }}"><span class="eyebrow">Le bestiaire</span><h2>Les mêmes monstres.<br>D’autres souvenirs.</h2><p>Retrouver chaque monstre et comparer les chasses d’un jeu à l’autre.</p><span class="text-link">Consulter le bestiaire <span aria-hidden="true">↗</span></span></a>
+  <a class="archive-path" href="{{ get_url(path='@/weapons/_index.md') | safe }}"><span class="eyebrow">L’arsenal</span><h2>À chaque chasse,<br>son arme.</h2><p>Parcourir les usages relevés et les habitudes forgées au fil des jeux.</p><span class="text-link">Explorer les armes <span aria-hidden="true">↗</span></span></a>
+</section>
 {% if data.timeline | length > 0 %}
-<h2>Chronologie</h2>
-<ol class="timeline">
-  {% for event in data.timeline %}
-  <li class="timeline__item timeline__item--{{ event.kind }}">
-    <time class="timeline__date" datetime="{{ event.date }}">{{ event.date_label }}</time>
-    <span class="timeline__label">{{ event.label }}</span>
-    <span class="timeline__kind">{{ event.kind_label }}</span>
-  </li>
-  {% endfor %}
-</ol>
+<section aria-labelledby="timeline-title">
+  <div class="section-heading"><div><p class="eyebrow">Les traces du voyage</p><h2 id="timeline-title">Repères de carrière</h2></div><span class="section-note">Dates connues dans les archives</span></div>
+  <ol class="timeline">
+    {% for event in data.timeline %}
+    <li class="timeline__item timeline__item--{{ event.kind }}"><time class="timeline__date" datetime="{{ event.date }}">{{ event.date_label }}</time><span class="timeline__label">{{ event.label }}</span><span class="timeline__kind">{{ event.kind_label }}</span></li>
+    {% endfor %}
+  </ol>
+</section>
 {% endif %}
-
-<h2>Les jeux</h2>
-<div class="table-scroll">
-  <table>
-    <thead>
-      <tr>
-        <th scope="col">Jeu</th>
-        <th scope="col">Plateforme</th>
-        <th scope="col" class="num">Temps de jeu</th>
-        <th scope="col" class="num">Chasses</th>
-        <th scope="col" class="num">Captures</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for game in data.games %}
-      <tr>
-        <th scope="row">
-          <a href="{{ get_url(path='@/games/' ~ game.id ~ '.md') | safe }}">{{ game.short_title }}</a>
-        </th>
-        <td>{{ game.platform_name }}</td>
-        {{ fmt::cell(v=game.progress.playtime_display) }}
-        {{ fmt::barred(v=game.total_hunted, bar=game.bar) }}
-        {{ fmt::cell(v=game.total_captured) }}
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
 {% endblock content %}

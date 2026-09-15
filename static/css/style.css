@@ -9,41 +9,8 @@
  * modification de la palette.
  */
 
-/* ---------- Polices, auto-hébergées ----------
- * Fichiers à déposer dans static/fonts/ sous ces noms exacts.
- * Tant qu'ils sont absents, les replis système prennent le relais et le site
- * reste lisible — c'est tout l'intérêt de `font-display: swap`. */
-
-@font-face {
-  font-family: "Fraunces";
-  src: url("../fonts/fraunces-600.woff2") format("woff2");
-  font-weight: 600;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Fraunces";
-  src: url("../fonts/fraunces-900.woff2") format("woff2");
-  font-weight: 900;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Plex";
-  src: url("../fonts/plex-sans-400.woff2") format("woff2");
-  font-weight: 400;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Plex";
-  src: url("../fonts/plex-sans-500.woff2") format("woff2");
-  font-weight: 500;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Plex";
-  src: url("../fonts/plex-sans-600.woff2") format("woff2");
-  font-weight: 600;
-  font-display: swap;
-}
+/* Polices système : les fichiers de polices personnalisées ne sont pas encore
+ * fournis. Aucun appel vers un fichier absent ni vers un hébergeur tiers. */
 
 :root {
   /* Fonds */
@@ -71,10 +38,10 @@
   --lv-3: rgba(200, 122, 74, 0.58);
   --lv-4: rgba(200, 122, 74, 0.92);
 
-  --display: "Fraunces", Georgia, "Times New Roman", serif;
-  --sans: "Plex", ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif;
+  --display: Georgia, "Times New Roman", serif;
+  --sans: "Segoe UI", ui-sans-serif, system-ui, sans-serif;
 
-  --measure: 74rem;
+  --measure: 84rem;
   --gutter: clamp(1.15rem, 4vw, 3rem);
 
   color-scheme: dark;
@@ -495,6 +462,109 @@ tbody tr:hover th, tbody tr:hover td { background: var(--surface); }
 }
 
 /* ---------- Petits écrans ---------- */
+
+/* ---------- Carte de guilde ----------
+ * Palette conservée. Contrastes recalculés sur --surface : os 14.67,
+ * secondaire 6.46, discret 4.76, cuivre 5.59, cuivre clair 8.01.
+ * Sur --surface-up : os 13.70, secondaire 6.03, cuivre clair 7.49.
+ * Les petits textes sur illustration ont un fond opaque. Le grand titre est
+ * protégé par un dégradé sombre. Les bordures sont uniquement décoratives. */
+
+:focus-visible { outline: 2px solid var(--copper-lift); outline-offset: 5px; }
+html { scroll-padding-top: 2rem; }
+.masthead { align-items: center; justify-content: space-between; padding-top: 1.15rem; padding-bottom: 1.15rem; border-bottom: 1px solid var(--line); }
+.masthead__brand { display: flex; align-items: center; gap: 0.8rem; font-family: var(--sans); font-size: 1.05rem; letter-spacing: 0.12em; }
+.masthead__brand img { flex: none; }
+.masthead__brand small { display: block; font-size: 0.57rem; text-transform: uppercase; color: var(--bone-dim); font-weight: 500; letter-spacing: 0.2em; margin-top: 0.15rem; }
+.brand-divider { color: var(--copper); }
+.masthead__nav { gap: clamp(0.8rem, 2vw, 2rem); }
+.masthead__nav a { font-size: 0.7rem; letter-spacing: 0.1em; padding: 0.4rem 0; }
+.masthead__nav a[aria-current="page"] { color: var(--bone); border-color: var(--copper); }
+.eyebrow { margin: 0 0 1rem; font: 600 0.66rem/1.6 var(--sans); text-transform: uppercase; letter-spacing: 0.2em; color: var(--copper-lift); }
+.eyebrow > span { padding: 0 0.4rem; color: var(--bone-faint); }
+.page { padding-top: 3rem; }
+.career-hero { position: relative; isolation: isolate; min-height: 32rem; display: flex; align-items: center; margin: -3rem calc(-1 * var(--gutter)) 0; padding: 3rem var(--gutter) 4rem; overflow: hidden; }
+.career-hero__art { position: absolute; z-index: -1; inset: 0; background: var(--ground) url('../images/rathalos-hero.png') right center / auto 115% no-repeat; }
+.career-hero__art::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, var(--ground) 0%, transparent 75%), linear-gradient(0deg, var(--ground), transparent 24%); }
+.career-hero__content { max-width: 36rem; }
+.career-hero .eyebrow { display: inline-block; padding: 0.3rem 0.5rem; margin-left: -0.5rem; background: var(--ground); }
+.career-hero h1 { font-size: clamp(3.9rem, 7.8vw, 7rem); font-weight: 600; letter-spacing: -0.065em; line-height: 0.98; margin: 0 0 1.6rem; text-shadow: 0 2px 18px var(--ground); }
+.career-hero h1 em { color: var(--copper-lift); font-weight: 400; }
+.hero-intro { color: var(--bone-dim); font-size: 0.88rem; line-height: 1.8; background: var(--ground); width: fit-content; padding: 0.35rem 0.5rem; margin: 0 0 1.8rem -0.5rem; }
+.guild-button { display: inline-flex; align-items: center; gap: 2.5rem; padding: 0.8rem 1.25rem; color: var(--ground); background: var(--copper-lift); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 9px 100%, 0 calc(100% - 9px)); }
+.guild-button:hover { color: var(--ground); background: var(--bone); }
+.hero-caption { position: absolute; right: var(--gutter); bottom: 1.5rem; font-size: 0.65rem; letter-spacing: 0.09em; color: var(--bone-dim); background: var(--ground); padding: 0.2rem 0.5rem; }
+.career-record { position: relative; margin-bottom: 4.5rem; border-top: 2px solid var(--copper); background: var(--surface); }
+.record-heading { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem; padding: 1.1rem 1.4rem 0; }
+.record-heading .eyebrow { margin: 0; }
+.record-heading > span:last-child { color: var(--bone-dim); font-size: 0.67rem; }
+.stat-grid--career { grid-template-columns: repeat(2, minmax(0, 1fr)); border: 0; margin: 0; padding: 0.7rem 0; }
+.stat-grid--career .stat { border: 0; padding: 1.3rem 1.4rem; }
+.stat-grid--career .stat__value { font-family: var(--display); font-size: 2.35rem; letter-spacing: -0.04em; }
+.stat-grid--career .stat:nth-child(-n+2) .stat__value { font-size: 3.6rem; color: var(--copper-lift); }
+.stat-grid--career .stat__label { font-size: 0.62rem; letter-spacing: 0.08em; }
+.stat-grid--career .stat__note { font-size: 0.64rem; }
+.section-heading { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 1rem; margin: 0 0 1.5rem; }
+.section-heading .eyebrow { margin-bottom: 0.5rem; }
+.section-heading h2 { border: 0; padding: 0; margin: 0; font-size: clamp(1.6rem, 3vw, 2.3rem); }
+.section-heading h2::before { display: none; }
+.text-link { font-size: 0.75rem; text-decoration: none; color: var(--copper-lift); }
+.text-link span { margin-left: 0.75rem; }
+.section-note { font-size: 0.7rem; color: var(--bone-dim); }
+.collection-grid { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr; gap: 1rem; }
+.game-card { background: var(--surface); border: 1px solid var(--line); padding: 1.2rem 1.3rem; position: relative; }
+.game-card::before { content: ''; position: absolute; top: -1px; left: -1px; width: 22px; height: 22px; border-top: 2px solid var(--copper); border-left: 2px solid var(--copper); pointer-events: none; }
+.game-card:focus-within { outline: 2px solid var(--copper-lift); outline-offset: 3px; }
+.game-card__top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.4rem; font-size: 0.58rem; color: var(--bone-dim); text-transform: uppercase; letter-spacing: 0.09em; }
+.game-card__status { display: flex; align-items: center; gap: 0.4rem; }
+.game-card__status::before { content: ''; width: 4px; height: 4px; border: 1px solid var(--bone-dim); transform: rotate(45deg); background: var(--bone-dim); }
+.game-card--pending .game-card__status::before { background: transparent; }
+.game-card__name { position: relative; display: flex; align-items: center; gap: 0.85rem; padding: 1.65rem 0; color: var(--bone); text-decoration: none; min-height: 8rem; }
+.game-card__name h3 { font-family: var(--sans); font-weight: 650; font-size: 1rem; letter-spacing: -0.02em; line-height: 1.3; max-width: 16ch; }
+.game-card__sigil { width: 4rem; height: 4rem; flex: none; display: grid; place-items: center; background: url('../images/guild-mark.svg') center / contain no-repeat; opacity: 0.7; }
+.game-card__arrow { color: var(--copper-lift); margin-left: auto; }
+.game-card:hover { border-color: var(--copper); }
+.game-card__stats { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 0.5rem; margin: 0; padding-top: 0.9rem; border-top: 1px solid var(--line); }
+.game-card__stats dt { font-size: 0.6rem; color: var(--bone-dim); }
+.game-card__stats dd { margin: 0.2rem 0 0; font-size: 1.12rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.archive-paths { display: grid; gap: 1rem; margin: 4rem 0; }
+.archive-path { display: block; text-decoration: none; padding: 2rem; border: 1px solid var(--line); background: var(--surface); position: relative; overflow: hidden; }
+.archive-path::after { content: ''; position: absolute; right: -2rem; top: -2rem; width: 12rem; height: 12rem; border: 1px solid var(--line); transform: rotate(45deg); pointer-events: none; }
+.archive-path:hover { border-color: var(--copper); }
+.archive-path h2 { border: 0; margin: 0.8rem 0 1rem; padding: 0; color: var(--bone); font-size: 2rem; line-height: 1.15; }
+.archive-path h2::before { display: none; }
+.archive-path p { max-width: 37ch; color: var(--bone-dim); font-size: 0.85rem; margin-bottom: 1.5rem; }
+.timeline__item { flex-wrap: wrap; gap: 0.35rem 1.2rem; }
+.footer-title { display: block; margin-bottom: 0.7rem; color: var(--bone); text-transform: uppercase; font-size: 0.66rem; letter-spacing: 0.15em; }
+.matrix tbody tr:hover td.cell--0 { background: var(--lv-0); }
+.matrix tbody tr:hover td.cell--1 { background: var(--lv-1); }
+.matrix tbody tr:hover td.cell--2 { background: var(--lv-2); }
+.matrix tbody tr:hover td.cell--3 { background: var(--lv-3); }
+.matrix tbody tr:hover td.cell--4 { background: var(--lv-4); }
+@media (min-width: 42rem) {
+  .collection-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .archive-paths { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stat-grid--career { grid-template-columns: 1.35fr 1.35fr 1fr 1fr 1fr; }
+  .stat-grid--career .stat + .stat { border-left: 1px solid var(--line); }
+}
+@media (min-width: 64rem) {
+  .collection-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 42rem) {
+  .masthead { gap: 1rem; }
+  .masthead__nav { width: 100%; justify-content: space-between; gap: 0.5rem; }
+  .masthead__nav a { font-size: 0.57rem; }
+  .career-hero { min-height: 37rem; align-items: end; padding-top: 12rem; padding-bottom: 3rem; }
+  .career-hero__art { background-size: auto 70%; background-position: 68% top; }
+  .career-hero__art::after { background: linear-gradient(0deg, var(--ground) 8%, transparent 100%); }
+  .career-hero h1 { font-size: clamp(3.5rem, 15vw, 5.5rem); }
+  .career-hero .eyebrow { font-size: 0.56rem; }
+  .hero-intro { font-size: 0.77rem; }
+  .hero-caption { display: none; }
+  .stat-grid--career .stat:last-child { grid-column: 1 / -1; border-top: 1px solid var(--line); }
+  .stat-grid--career .stat:nth-child(-n+2) .stat__value { font-size: 2.8rem; }
+  .archive-path { padding: 1.5rem; }
+}
 
 @media (max-width: 34rem) {
   .page { padding-top: 2.2rem; }

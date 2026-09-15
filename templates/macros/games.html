@@ -1,0 +1,12 @@
+{% import "macros/fmt.html" as fmt %}
+{% macro collection(games) %}
+<ul class="collection-grid">
+  {% for game in games %}
+  <li class="game-card{% if not game.has_data %} game-card--pending{% endif %}">
+    <div class="game-card__top"><span>{{ game.platform_name }}</span><span class="game-card__status">{% if game.has_data %}Relevés disponibles{% else %}À documenter{% endif %}</span></div>
+    <a class="game-card__name" href="{{ get_url(path='@/games/' ~ game.id ~ '.md') | safe }}"><span class="game-card__sigil" aria-hidden="true"></span><h3>{{ game.title }}</h3><span class="game-card__arrow" aria-hidden="true">↗</span></a>
+    <dl class="game-card__stats"><div><dt>Temps de jeu</dt><dd>{{ fmt::num(v=game.progress.playtime_display) }}</dd></div><div><dt>Chasses</dt><dd>{{ fmt::num(v=game.total_hunted) }}</dd></div><div><dt>Captures</dt><dd>{{ fmt::num(v=game.total_captured) }}</dd></div></dl>
+  </li>
+  {% endfor %}
+</ul>
+{% endmacro collection %}

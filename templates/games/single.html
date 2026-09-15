@@ -7,6 +7,7 @@
    (games_by_id), pas par un filtrage dans le template. #}
 {% set game = data.games_by_id[page.slug] %}
 
+<p class="eyebrow">Carnet de guilde <span> / </span> {{ game.short_title }}</p>
 <h1>{{ game.title }}</h1>
 <p class="lede">
   {{ game.platform_name }}

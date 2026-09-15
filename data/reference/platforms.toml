@@ -1,0 +1,27 @@
+# Plateformes de jeu.
+# Referentiel canonique : voir docs/DATA-MODEL.md, couche 1.
+
+[platforms.nintendo_3ds]
+name = "Nintendo 3DS"
+manufacturer = "Nintendo"
+released = 2011
+
+[platforms.nintendo_switch]
+name = "Nintendo Switch"
+manufacturer = "Nintendo"
+released = 2017
+
+[platforms.playstation_4]
+name = "PlayStation 4"
+manufacturer = "Sony"
+released = 2013
+
+# TODO: preciser s'il s'agit du Game Pass console (Xbox One / Series) ou PC.
+# La methode de capture et l'acces aux succes en dependent
+# (voir docs/CAPTURE-CHECKLIST.md, section mhrise).
+[platforms.xbox]
+name = "Xbox"
+manufacturer = "Microsoft"
+
+[platforms.pc]
+name = "PC"

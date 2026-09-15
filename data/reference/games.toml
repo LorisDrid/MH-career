@@ -1,0 +1,53 @@
+# Les jeux de la collection.
+#
+# Champs volontairement ABSENTS a ce stade, a remplir par l'utilisateur :
+#   released     annee de sortie occidentale
+#   played_from  premier mois joue, format "YYYY-MM"
+#   played_to    dernier mois joue, format "YYYY-MM"
+#
+# played_from et played_to sont des donnees PERSONNELLES : elles alimentent la
+# timeline de carriere et datent les vues croisees. Aucun agent ne doit les
+# deviner (AGENTS.md 2.3). Tant qu'elles sont absentes, la timeline reste vide,
+# ce qui est le comportement correct.
+
+[games.mh3u]
+title = "Monster Hunter 3 Ultimate"
+short_title = "MH3U"
+platform = "nintendo_3ds"
+generation = 3
+status = "finished"
+
+[games.mh4u]
+title = "Monster Hunter 4 Ultimate"
+short_title = "MH4U"
+platform = "nintendo_3ds"
+generation = 4
+status = "finished"
+
+[games.mhgu]
+title = "Monster Hunter Generations Ultimate"
+short_title = "MHGU"
+platform = "nintendo_switch"
+generation = 4
+status = "finished"
+
+[games.mhw]
+title = "Monster Hunter: World"
+short_title = "MHW"
+platform = "playstation_4"
+generation = 5
+status = "finished"
+
+[games.mhrise]
+title = "Monster Hunter Rise"
+short_title = "Rise"
+platform = "xbox"
+generation = 5
+status = "finished"
+
+[games.mhwilds]
+title = "Monster Hunter Wilds"
+short_title = "Wilds"
+platform = "pc"
+generation = 6
+status = "planned"

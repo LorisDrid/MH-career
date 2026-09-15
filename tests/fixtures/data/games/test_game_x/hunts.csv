@@ -1,0 +1,4 @@
+monster_id,hunted,captured,notes
+test_monster_a,10,2,
+test_monster_a_variant,5,,pas de compteur de capture sur cet ecran
+test_monster_b,0,0,croise mais jamais chasse

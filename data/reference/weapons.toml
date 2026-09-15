@@ -1,0 +1,64 @@
+# Les 14 types d'armes de la licence.
+#
+# Champs volontairement ABSENTS, a remplir par l'utilisateur :
+#   name_fr      nom francais, a relever dans tes propres jeux (ils sont en VF)
+#   introduced   id du jeu d'apparition du type d'arme
+#
+# introduced sert a ne pas afficher une arme sur un jeu anterieur a son
+# apparition : une case vide et une arme inexistante ne se rendent pas pareil.
+
+[weapons.great_sword]
+name_en = "Great Sword"
+category = "melee"
+
+[weapons.long_sword]
+name_en = "Long Sword"
+category = "melee"
+
+[weapons.sword_and_shield]
+name_en = "Sword and Shield"
+category = "melee"
+
+[weapons.dual_blades]
+name_en = "Dual Blades"
+category = "melee"
+
+[weapons.hammer]
+name_en = "Hammer"
+category = "melee"
+
+[weapons.hunting_horn]
+name_en = "Hunting Horn"
+category = "melee"
+
+[weapons.lance]
+name_en = "Lance"
+category = "melee"
+
+[weapons.gunlance]
+name_en = "Gunlance"
+category = "melee"
+
+[weapons.switch_axe]
+name_en = "Switch Axe"
+category = "melee"
+
+[weapons.charge_blade]
+name_en = "Charge Blade"
+category = "melee"
+
+[weapons.insect_glaive]
+name_en = "Insect Glaive"
+category = "melee"
+
+[weapons.light_bowgun]
+name_en = "Light Bowgun"
+category = "ranged"
+
+[weapons.heavy_bowgun]
+name_en = "Heavy Bowgun"
+category = "ranged"
+
+[weapons.bow]
+name_en = "Bow"
+category = "ranged"

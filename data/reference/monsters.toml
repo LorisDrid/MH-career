@@ -1,0 +1,29 @@
+# Referentiel canonique des monstres.
+#
+# VIDE A DESSEIN. Il se remplit au fil de la saisie (phases 2 et 3), monstre par
+# monstre, quand tu en rencontres un dans une Guild Card. Le pre-remplir avec les
+# 200+ monstres de la licence serait du travail de wiki, hors sujet.
+#
+# Regles (voir docs/DATA-MODEL.md) :
+#   - id en snake_case, JAMAIS de tiret : dans Tera, monsters.rathalos-azure
+#     serait evalue comme la soustraction rathalos - azure
+#   - id derive du nom ANGLAIS, qui est la forme stable entre les jeux
+#   - une variante porte base + variant_type ; les deux ensemble ou aucun des deux
+#   - une variante ne peut pas pointer vers une autre variante
+#
+# Exemple d'une forme de base et de sa sous-espece :
+#
+#   [monsters.rathalos]
+#   name_en = "Rathalos"
+#   name_fr = "Rathalos"
+#   species = "flying_wyvern"
+#   debut = "mh3u"            # premier de TES jeux ou tu l'as croise
+#
+#   [monsters.rathalos_azure]
+#   name_en = "Azure Rathalos"
+#   name_fr = "Rathalos azur"
+#   species = "flying_wyvern"
+#   base = "rathalos"
+#   variant_type = "subspecies"
+
+[monsters]

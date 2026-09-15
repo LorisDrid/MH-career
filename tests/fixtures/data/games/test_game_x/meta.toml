@@ -1,0 +1,12 @@
+game = "test_game_x"
+
+[progress]
+hunter_rank = 7
+playtime_minutes = 600
+playtime_precision = "minutes"
+quests_completed = 0
+
+[[sources]]
+kind = "guild_card"
+captured_on = "2020-06-15"
+note = "fixture de test, aucune statistique reelle"

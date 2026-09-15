@@ -1,0 +1,8 @@
+[games.test_game_x]
+title = "Test Game X"
+short_title = "TGX"
+platform = "test_platform"
+generation = 1
+status = "finished"
+played_from = "2020-01"
+played_to = "2020-06"

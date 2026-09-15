@@ -1,0 +1,16 @@
+[monsters.test_monster_a]
+name_en = "Test Monster A"
+name_fr = "Monstre de test A"
+species = "test_species"
+
+[monsters.test_monster_a_variant]
+name_en = "Variant Test Monster A"
+name_fr = "Variante du monstre A"
+species = "test_species"
+base = "test_monster_a"
+variant_type = "subspecies"
+
+[monsters.test_monster_b]
+name_en = "Test Monster B"
+name_fr = "Monstre de test B"
+species = "test_species"

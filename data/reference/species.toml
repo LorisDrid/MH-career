@@ -1,0 +1,41 @@
+# Especes de monstres.
+#
+# ATTENTION : les noms francais ci-dessous sont a CONFIRMER dans tes jeux en VF.
+# Ils sont fournis pour amorcer le referentiel, pas comme source de verite.
+# Corriger directement ici au fil de la saisie (AGENTS.md 2.3).
+#
+# Ce referentiel se complete au fil de la phase 3, quand les monstres arrivent.
+# Il n'a pas vocation a lister toutes les especes de la licence : seulement
+# celles dont TES monstres ont besoin (cf. non-objectifs, AGENTS.md 1).
+
+[species.flying_wyvern]
+name_en = "Flying Wyvern"
+name_fr = "Wyverne volante"
+
+[species.brute_wyvern]
+name_en = "Brute Wyvern"
+name_fr = "Wyverne brute"
+
+[species.bird_wyvern]
+name_en = "Bird Wyvern"
+name_fr = "Wyverne-oiseau"
+
+[species.fanged_wyvern]
+name_en = "Fanged Wyvern"
+name_fr = "Wyverne a crocs"
+
+[species.piscine_wyvern]
+name_en = "Piscine Wyvern"
+name_fr = "Wyverne piscine"
+
+[species.fanged_beast]
+name_en = "Fanged Beast"
+name_fr = "Bete a crocs"
+
+[species.leviathan]
+name_en = "Leviathan"
+name_fr = "Leviathan"
+
+[species.elder_dragon]
+name_en = "Elder Dragon"
+name_fr = "Dragon ancien"

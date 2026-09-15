@@ -1,0 +1,7 @@
+[weapons.great_sword]
+name_en = "Great Sword"
+category = "melee"
+
+[weapons.long_sword]
+name_en = "Long Sword"
+category = "melee"

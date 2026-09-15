@@ -1,13 +1,13 @@
 # Verification continue.
 #
-# Ce workflow ne deploie RIEN : le site est construit et publie par Vercel a
-# chaque push (voir vercel.json et tools/deploy.py). Son role est d'afficher
+# Ce workflow ne deploie RIEN : le site est construit et publie par Cloudflare
+# Pages a chaque push (voir tools/deploy.py). Son role est d'afficher
 # l'etat des donnees et des tests sur le depot lui-meme, pour qu'une erreur
 # saute aux yeux sans avoir a ouvrir le journal d'un autre service.
 #
 # Il n'installe pas Zola : la construction du site est verifiee par le
-# deploiement Vercel, qui echoue et ne publie rien si un template casse. Garder
-# ce workflow en Python pur le rend rapide et sans dependance.
+# deploiement Cloudflare, qui echoue et ne publie rien si un template casse.
+# Garder ce workflow en Python pur le rend rapide et sans dependance.
 
 name: CI
 

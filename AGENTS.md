@@ -134,7 +134,7 @@ de ce type semble utile, la proposer dans la réponse, ne pas l'implémenter.
 | Traitement des données | **Python 3.12, stdlib seule** | `tomllib`, `csv`, `json`, `dataclasses`, `unittest` couvrent 100% du besoin → zéro installation | **Python + Jinja2 + PyYAML** : chaîne à un seul outil, plus souple, mais 2 dépendances à installer et on perd le serveur de dev de Zola. **Rust** : cohérent avec Zola mais toolchain absente de la machine et surdimensionné pour ~2000 lignes de données. |
 | Format des sources | **TOML** (métadonnées, référentiels) + **CSV** (tableaux volumineux) | `tomllib` et `csv` sont en stdlib ; TOML accepte les commentaires (traçabilité des sources) ; le CSV permet de saisir 200 compteurs dans un tableur puis de coller le fichier | **YAML** : plus compact pour l'imbriqué, mais dépendance externe et pièges connus (indentation, `no` converti en `false`). **JSON** : zéro dépendance mais pas de commentaires et saisie manuelle pénible — rédhibitoire pour un projet dont l'activité principale *est* la saisie manuelle. |
 | Graphiques | **SVG généré en Python au build** | Zéro JS, zéro CDN, zéro requête tierce ; le site rendra à l'identique dans dix ans ; infobulles faisables en CSS pur | **ECharts via CDN** : heatmap/radar/sunburst prêts à l'emploi et rendu très soigné pour bien moins de code, mais dépendance tierce chargée dans le navigateur à chaque visite et site cassé si le CDN disparaît. Sous un critère « richesse visuelle à effort minimal », ECharts gagnait. |
-| Hébergement | **Vercel** | Adresse indépendante du domaine personnel, dépôt inchangé, gratuit | **GitHub Pages** : une seule chaîne et un seul fournisseur, mais le domaine personnalisé du site utilisateur capture **tous** les chemins `<user>.github.io`, y compris les pages de projet — l'archive serait sortie sous le domaine du portfolio. Y échapper imposait de créer une organisation et de transférer le dépôt. **Cloudflare Pages** : équivalent à Vercel, écarté au choix de l'utilisateur. |
+| Hébergement | **Cloudflare Pages** | Adresse indépendante du domaine personnel, dépôt inchangé, gratuit, et le compte existait déjà | **GitHub Pages** : une seule chaîne et un seul fournisseur, mais le domaine personnalisé du site utilisateur capture tous les chemins `<user>.github.io` — l'archive serait sortie sous le domaine du portfolio, et y échapper imposait une organisation et un transfert de dépôt. **Vercel** : équivalent à Cloudflare Pages, mais l'unique espace du compte est passé en Pro et le plan gratuit n'en autorise qu'un. |
 | Photos sources | Brutes **hors repo** + versions réduites commitées | Repo léger, mais chaque chiffre reste traçable à sa source — c'est l'intérêt même d'un projet d'archivage | **Tout hors repo** : plus de traçabilité visible. **Tout dans le repo** : plusieurs centaines de Mo dans l'historique, irréversible sans réécrire l'historique. |
 | Langue | IDs/code/commits en **anglais**, prose en **français** | Les IDs sont des clés techniques stables : en anglais ils restent alignés sur les sources externes (wikis, API Steam) | Tout en français : confortable mais friction permanente au croisement avec les sources externes. |
 
@@ -406,47 +406,53 @@ succès, jamais le détail « 247 Rathalos » — celui-ci reste dans la sauvega
 
 ## 11. Déploiement
 
-**Vercel construit et publie le site à chaque push.** Tout tient dans deux
-fichiers : `vercel.json` (commande de build, dossier de sortie) et
-`tools/deploy.py` (le build lui-même).
+**Cloudflare Pages construit et publie le site à chaque push.** Toute la logique
+tient dans `tools/deploy.py` : il télécharge Zola à **version épinglée**, vérifie
+son empreinte SHA-256, génère les données puis construit le site.
 
-`tools/deploy.py` télécharge Zola à **version épinglée**, vérifie son empreinte
-SHA-256, génère les données puis construit le site. Il est écrit en Python
-stdlib plutôt qu'en commande shell dans la configuration Vercel : la discipline
-de version épinglée était le point le plus fragile de la chaîne, et elle est
-plus lisible et plus modifiable dans du code que dans une chaîne de
-configuration.
+Écrit en Python stdlib plutôt qu'en commande shell chez l'hébergeur : la
+discipline de version épinglée était le point le plus fragile de la chaîne, et
+elle est plus lisible et plus modifiable dans du code que dans une chaîne de
+configuration. Rien n'y est propre à Cloudflare hormis la lecture d'une variable
+d'environnement — le script fonctionnerait tel quel ailleurs.
 
-Tant que `ZOLA_SHA256` est vide, le téléchargement n'est pas vérifié et un
-avertissement le signale dans le journal de build — l'absence de contrôle reste
-visible au lieu d'être silencieuse. La valeur se relève dans le journal du
-premier déploiement.
+### Réglages à saisir dans le tableau de bord Cloudflare
 
-**`base_url` n'est pas figé dans `config.toml` pour la production.**
-`tools/deploy.py` lit `VERCEL_PROJECT_PRODUCTION_URL` dans l'environnement et le
-passe à `zola build --base-url`. Le site ne dépend donc pas du nom que Vercel
-attribue au projet. La valeur du fichier de configuration ne sert qu'aux
-constructions locales.
+| Champ | Valeur |
+|---|---|
+| Build command | `python3 -m tools.deploy` |
+| Build output directory | `public` |
+| Root directory | `/` |
+| Variable `PYTHON_VERSION` | `3.12` |
+| Variable `SITE_BASE_URL` | l'adresse canonique du site |
 
-Vercel sert le site à la **racine** de son domaine : il n'y a pas de
-sous-chemin, et le piège classique du déploiement en sous-répertoire ne
-s'applique pas ici.
+`PYTHON_VERSION` n'est pas optionnel : `tomllib` exige Python ≥ 3.11, et
+`deploy.py` s'arrête avec un message explicite si la version est trop ancienne.
 
-> Pourquoi pas GitHub Pages : le site utilisateur du compte porte un domaine
-> personnalisé, et GitHub redirige alors **tous** les chemins de
-> `<user>.github.io` vers ce domaine, y compris les pages de projet. L'archive
-> se serait retrouvée servie sous le domaine du portfolio, ce qui n'était pas
-> souhaité. Sous un critère « une seule chaîne, un seul fournisseur », GitHub
-> Pages restait préférable ; sous le critère « adresse indépendante », il ne
-> pouvait pas répondre sans créer une organisation.
+`SITE_BASE_URL` prime sur `CF_PAGES_URL`, que Cloudflare fournit mais qui
+désigne le **déploiement courant** : parfait pour une prévisualisation, mais les
+liens de production pointeraient alors vers un déploiement particulier.
+
+### L'empreinte de Zola
+
+Tant que `ZOLA_SHA256` est vide dans `tools/deploy.py`, le téléchargement n'est
+pas vérifié et un avertissement le signale dans le journal — l'absence de
+contrôle reste visible au lieu d'être silencieuse. La valeur se relève dans le
+journal du premier déploiement, puis se fige dans le fichier.
 
 ### Ce que la CI fait, et ne fait pas
 
 `.github/workflows/ci.yml` ne déploie rien. Il lance les tests et la validation
 des données, pour qu'une erreur apparaisse sur le dépôt et pas seulement dans le
 journal d'un autre service. Il n'installe pas Zola : la construction du site est
-vérifiée par le déploiement Vercel, qui échoue et ne publie rien si un template
-casse.
+vérifiée par le déploiement, qui échoue et ne publie rien si un template casse.
+
+### Pourquoi pas GitHub Pages
+
+Le site utilisateur du compte porte un domaine personnalisé, et GitHub redirige
+alors **tous** les chemins de `<user>.github.io` vers ce domaine, pages de projet
+comprises. L'archive serait sortie sous le domaine du portfolio. Y échapper
+imposait de créer une organisation et d'y transférer le dépôt.
 
 ## 12. Définition du « terminé »
 

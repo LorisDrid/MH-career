@@ -1,14 +1,17 @@
-"""Build de deploiement, execute par Vercel.
+"""Build de deploiement, execute par Cloudflare Pages.
 
-Vercel ne fournit pas Zola. Ce script le telecharge a version EPINGLEE, verifie
-son empreinte, genere les donnees puis construit le site — le tout en
+L'hebergeur ne fournit pas Zola. Ce script le telecharge a version EPINGLEE,
+verifie son empreinte, genere les donnees puis construit le site — le tout en
 bibliotheque standard, comme le reste du projet.
 
     python3 -m tools.deploy
 
-Pourquoi en Python plutot qu'en commande shell dans la configuration Vercel :
-la discipline de version epinglee et de somme de controle etait le point le plus
-fragile du deploiement. La mettre dans du code plutot que dans une chaine de
+Rien ici n'est propre a Cloudflare hormis la lecture d'une variable
+d'environnement : le script fonctionnerait tel quel chez un autre hebergeur.
+
+Pourquoi en Python plutot qu'en commande shell chez l'hebergeur : la discipline
+de version epinglee et de somme de controle etait le point le plus fragile du
+deploiement. La mettre dans du code plutot que dans une chaine de
 configuration la rend lisible, commentee et modifiable au meme endroit que le
 reste de la chaine.
 """
@@ -82,14 +85,23 @@ def fetch_zola(destination: Path) -> Path:
 
 
 def site_base_url() -> str | None:
-    """URL de production, fournie par Vercel a la construction.
+    """URL du site, lue dans l'environnement de construction.
 
-    La lire dans l'environnement plutot que de la figer dans config.toml evite
-    de dependre du nom que Vercel attribuera au projet. En local, la variable
-    est absente et Zola retombe sur la valeur du fichier de configuration.
+    Deux sources, dans cet ordre :
+
+    - SITE_BASE_URL, que l'on renseigne soi-meme chez l'hebergeur. C'est
+      l'adresse canonique, et elle prime : CF_PAGES_URL designe le deploiement
+      COURANT, ce qui convient aux previsualisations mais ferait pointer les
+      liens de production vers un deploiement particulier.
+    - CF_PAGES_URL, fournie par Cloudflare Pages, comme repli raisonnable.
+
+    En local, les deux sont absentes et Zola retombe sur config.toml.
     """
-    host = os.environ.get("VERCEL_PROJECT_PRODUCTION_URL")
-    return f"https://{host}" if host else None
+    for variable in ("SITE_BASE_URL", "CF_PAGES_URL"):
+        value = os.environ.get(variable)
+        if value:
+            return value.rstrip("/")
+    return None
 
 
 def main() -> int:

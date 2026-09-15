@@ -1,14 +1,15 @@
 # Configuration Zola.
 #
-# Le site est deploye sur Vercel, qui le sert a la RACINE de son domaine : il
+# Le site est deploye sur Cloudflare Pages, qui le sert a la RACINE de son
+# domaine : il
 # n'y a donc plus de sous-chemin, et le piege classique du deploiement en
 # sous-repertoire disparait avec lui.
 #
 # Cette valeur ne sert qu'aux constructions locales. En deploiement,
-# tools/deploy.py passe --base-url a Zola en lisant l'URL de production dans
-# l'environnement Vercel, ce qui evite de dependre du nom que Vercel attribuera
-# au projet.
-base_url = "https://mh-career.vercel.app"
+# tools/deploy.py passe --base-url a Zola en lisant SITE_BASE_URL (ou a defaut
+# CF_PAGES_URL) dans l'environnement de construction, ce qui evite de dependre
+# du nom attribue au projet chez l'hebergeur.
+base_url = "https://mh-career.pages.dev"
 
 title = "MH-career"
 description = "Archive personnelle de mes statistiques Monster Hunter"

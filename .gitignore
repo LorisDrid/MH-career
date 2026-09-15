@@ -1,0 +1,39 @@
+# --- Sortie de build ---
+
+# Site genere par Zola
+public/
+
+# Donnees generees par tools/build.py.
+# Ignorees car entierement reconstructibles depuis data/reference et data/games.
+# Alternative envisageable en phase 1 : les commiter rendrait les diffs de
+# statistiques lisibles dans l'historique, au prix de bruit a chaque build.
+data/generated/
+
+# --- Sources photo ---
+
+# Les photos brutes vivent HORS du repo (voir docs/CAPTURE-CHECKLIST.md).
+# Ces motifs sont un filet de securite au cas ou un dossier de captures
+# atterrirait ici par erreur.
+MH-career-sources/
+sources-raw/
+*.NEF
+*.CR2
+*.dng
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# --- Outillage local ---
+.claude/settings.local.json
+.idea/
+.vscode/
+*.swp
+
+# --- Systeme ---
+.DS_Store
+Thumbs.db
+desktop.ini

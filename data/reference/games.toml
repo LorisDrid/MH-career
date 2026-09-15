@@ -23,6 +23,9 @@ short_title = "MH4U"
 platform = "nintendo_3ds"
 generation = 4
 status = "finished"
+# Derniere session datee par le Journal de chasse (2016/07/18). Le debut reste
+# inconnu : le journal ne conserve que les sessions recentes.
+played_to = "2016-07"
 
 [games.mhgu]
 title = "Monster Hunter Generations Ultimate"

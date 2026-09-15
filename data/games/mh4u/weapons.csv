@@ -1,0 +1,15 @@
+weapon_id,uses,notes
+great_sword,1,
+long_sword,1,
+sword_and_shield,1,
+dual_blades,0,
+hammer,6,compteur masque par le curseur sur la photo, releve par l'utilisateur
+hunting_horn,0,
+lance,0,
+gunlance,0,
+switch_axe,1,
+charge_blade,80,
+insect_glaive,89,barre plus haute que celle de la Volto-hache (80), ce qui confirme 89
+light_bowgun,2,
+heavy_bowgun,1,
+bow,0,

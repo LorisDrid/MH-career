@@ -1,64 +1,80 @@
 # Les 14 types d'armes de la licence.
 #
-# Champs volontairement ABSENTS, a remplir par l'utilisateur :
-#   name_fr      nom francais, a relever dans tes propres jeux (ils sont en VF)
+# Les noms francais ont ete releves et confirmes par l'utilisateur le
+# 2026-09-15 depuis MH4U en VF.
+#
+# Champ volontairement ABSENT, a remplir plus tard :
 #   introduced   id du jeu d'apparition du type d'arme
 #
 # introduced sert a ne pas afficher une arme sur un jeu anterieur a son
 # apparition : une case vide et une arme inexistante ne se rendent pas pareil.
 
 [weapons.great_sword]
+name_fr = "Grande épée"
 name_en = "Great Sword"
 category = "melee"
 
 [weapons.long_sword]
+name_fr = "Épée longue"
 name_en = "Long Sword"
 category = "melee"
 
 [weapons.sword_and_shield]
+name_fr = "Épée et bouclier"
 name_en = "Sword and Shield"
 category = "melee"
 
 [weapons.dual_blades]
+name_fr = "Lames doubles"
 name_en = "Dual Blades"
 category = "melee"
 
 [weapons.hammer]
+name_fr = "Marteau"
 name_en = "Hammer"
 category = "melee"
 
 [weapons.hunting_horn]
+name_fr = "Corne de chasse"
 name_en = "Hunting Horn"
 category = "melee"
 
 [weapons.lance]
+name_fr = "Lance"
 name_en = "Lance"
 category = "melee"
 
 [weapons.gunlance]
+name_fr = "Lance-canon"
 name_en = "Gunlance"
 category = "melee"
 
 [weapons.switch_axe]
+name_fr = "Morpho-hache"
 name_en = "Switch Axe"
 category = "melee"
 
 [weapons.charge_blade]
+name_fr = "Volto-hache"
 name_en = "Charge Blade"
 category = "melee"
 
 [weapons.insect_glaive]
+name_fr = "Insecto-glaive"
 name_en = "Insect Glaive"
 category = "melee"
 
 [weapons.light_bowgun]
+name_fr = "Fusarbalète léger"
 name_en = "Light Bowgun"
 category = "ranged"
 
 [weapons.heavy_bowgun]
+name_fr = "Fusarbalète lourd"
 name_en = "Heavy Bowgun"
 category = "ranged"
 
 [weapons.bow]
+name_fr = "Arc"
 name_en = "Bow"
 category = "ranged"

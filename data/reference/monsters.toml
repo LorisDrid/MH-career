@@ -1,9 +1,5 @@
 # Referentiel canonique des monstres.
 #
-# VIDE A DESSEIN. Il se remplit au fil de la saisie (phases 2 et 3), monstre par
-# monstre, quand tu en rencontres un dans une Guild Card. Le pre-remplir avec les
-# 200+ monstres de la licence serait du travail de wiki, hors sujet.
-#
 # Regles (voir docs/DATA-MODEL.md) :
 #   - id en snake_case, JAMAIS de tiret : dans Tera, monsters.rathalos-azure
 #     serait evalue comme la soustraction rathalos - azure
@@ -11,19 +7,179 @@
 #   - une variante porte base + variant_type ; les deux ensemble ou aucun des deux
 #   - une variante ne peut pas pointer vers une autre variante
 #
-# Exemple d'une forme de base et de sa sous-espece :
+# PROVENANCE : les noms FRANCAIS viennent des Guild Cards photographiees et font
+# foi. Les noms ANGLAIS et les identifiants sont derives de ces noms FR et ne
+# sont PAS lus a l'ecran : ils servent de cle technique stable et restent a
+# confirmer. L'espece n'est volontairement pas renseignee, aucune Guild Card ne
+# l'affichant.
 #
-#   [monsters.rathalos]
-#   name_en = "Rathalos"
-#   name_fr = "Rathalos"
-#   species = "flying_wyvern"
-#   debut = "mh3u"            # premier de TES jeux ou tu l'as croise
-#
-#   [monsters.rathalos_azure]
-#   name_en = "Azure Rathalos"
-#   name_fr = "Rathalos azur"
-#   species = "flying_wyvern"
-#   base = "rathalos"
-#   variant_type = "subspecies"
+# Ajoutes le 2026-09-15 depuis MH4U (Guild Card page 6/7, 38 monstres).
 
-[monsters]
+
+[monsters.seltas]
+name_en = "Seltas"
+name_fr = "Seltas"
+
+[monsters.lagombi]
+name_en = "Lagombi"
+name_fr = "Lagombi"
+# nom FR lu "Legombi" sur la photo, orthographe a confirmer
+
+[monsters.great_jaggi]
+name_en = "Great Jaggi"
+name_fr = "Grand Jaggi"
+
+[monsters.velocidrome]
+name_en = "Velocidrome"
+name_fr = "Velocidrome"
+
+[monsters.gendrome]
+name_en = "Gendrome"
+name_fr = "Gendrome"
+
+[monsters.iodrome]
+name_en = "Iodrome"
+name_fr = "Iodrome"
+
+[monsters.cephadrome]
+name_en = "Cephadrome"
+name_fr = "Cephadrome"
+
+[monsters.kecha_wacha]
+name_en = "Kecha Wacha"
+name_fr = "Kecha Wacha"
+
+[monsters.tetsucabra]
+name_en = "Tetsucabra"
+name_fr = "Tetsucabra"
+
+[monsters.zamtrios]
+name_en = "Zamtrios"
+name_fr = "Zamtrios"
+
+[monsters.najarala]
+name_en = "Najarala"
+name_fr = "Najarala"
+
+[monsters.seltas_queen]
+name_en = "Seltas Queen"
+name_fr = "Reine Seltas"
+# traite comme monstre distinct et non comme variante de Seltas
+
+[monsters.nerscylla]
+name_en = "Nerscylla"
+name_fr = "Nerscylla"
+
+[monsters.daimyo_hermitaur]
+name_en = "Daimyo Hermitaur"
+name_fr = "Hermitaur Daimyo"
+
+[monsters.gore_magala]
+name_en = "Gore Magala"
+name_fr = "Gore Magala"
+
+[monsters.shagaru_magala]
+name_en = "Shagaru Magala"
+name_fr = "Shagaru Magala"
+# forme adulte de Gore Magala, traite comme monstre distinct
+
+[monsters.rathian]
+name_en = "Rathian"
+name_fr = "Rathian"
+
+[monsters.rathian_pink]
+name_en = "Pink Rathian"
+name_fr = "Rathian sakura"
+base = "rathian"
+variant_type = "subspecies"
+
+[monsters.rathalos]
+name_en = "Rathalos"
+name_fr = "Rathalos"
+
+[monsters.zinogre]
+name_en = "Zinogre"
+name_fr = "Zinogre"
+
+[monsters.monoblos]
+name_en = "Monoblos"
+name_fr = "Monoblos"
+
+[monsters.brachydios]
+name_en = "Brachydios"
+name_fr = "Brachydios"
+
+[monsters.deviljho]
+name_en = "Deviljho"
+name_fr = "Deviljho"
+
+[monsters.tigrex]
+name_en = "Tigrex"
+name_fr = "Tigrex"
+
+[monsters.yian_kut_ku]
+name_en = "Yian Kut-Ku"
+name_fr = "Yian Kut-Ku"
+
+[monsters.yian_kut_ku_blue]
+name_en = "Blue Yian Kut-Ku"
+name_fr = "Yian Kut-Ku bleu"
+base = "yian_kut_ku"
+variant_type = "subspecies"
+
+[monsters.yian_garuga]
+name_en = "Yian Garuga"
+name_fr = "Yian Garuga"
+
+[monsters.gypceros]
+name_en = "Gypceros"
+name_fr = "Gypceros"
+
+[monsters.gypceros_purple]
+name_en = "Purple Gypceros"
+name_fr = "Gypceros améthyste"
+base = "gypceros"
+variant_type = "subspecies"
+
+[monsters.basarios]
+name_en = "Basarios"
+name_fr = "Basarios"
+
+[monsters.basarios_ruby]
+name_en = "Ruby Basarios"
+name_fr = "Basarios rubis"
+base = "basarios"
+variant_type = "subspecies"
+
+[monsters.gravios]
+name_en = "Gravios"
+name_fr = "Gravios"
+
+[monsters.khezu]
+name_en = "Khezu"
+name_fr = "Khezu"
+
+[monsters.khezu_red]
+name_en = "Red Khezu"
+name_fr = "Khezu grenat"
+base = "khezu"
+variant_type = "subspecies"
+
+[monsters.congalala]
+name_en = "Congalala"
+name_fr = "Congalala"
+
+[monsters.congalala_emerald]
+name_en = "Emerald Congalala"
+name_fr = "Congalala émeraude"
+base = "congalala"
+variant_type = "subspecies"
+
+[monsters.kirin]
+name_en = "Kirin"
+name_fr = "Kirin"
+
+[monsters.dahren_mohran]
+name_en = "Dah'ren Mohran"
+name_fr = "Dah'ren Mohran"
+# taille affichee ----.-- : monstre non mesurable

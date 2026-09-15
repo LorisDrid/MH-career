@@ -1,0 +1,45 @@
+# Monster Hunter 4 Ultimate - releve du 2026-09-15.
+#
+# Tout provient de la Guild Card et du Journal de chasse photographies ce
+# jour-la. Aucune valeur n'est estimee : un compteur non affiche par le jeu est
+# simplement absent de ce fichier.
+
+game = "mh4u"
+
+[progress]
+hunter_name = "loris kill"
+title = "Aventurier en Volto-hache"
+hunter_rank = 4
+playtime_minutes = 5322
+playtime_precision = "minutes"
+
+# Ventilation telle qu'affichee par la Guild Card page 1/7. Le total n'est pas
+# saisi : il est calcule a l'agregation (voir Progress dans tools/model.py).
+[progress.quests]
+caravan_low = 67
+caravan_high = 14
+guild_hall_low = 59
+guild_hall_high = 0
+g_rank = 0
+guild_quests = 0
+arena = 8
+
+[[sources]]
+kind = "guild_card"
+captured_on = "2026-09-15"
+note = "page 1/7 : rang, quetes, StreetPass (photo 20260915_124659)"
+
+[[sources]]
+kind = "hunting_log"
+captured_on = "2026-09-15"
+note = "Journal de chasse : temps de jeu 88:42, derniere session 2016/07/18 (photo 20260915_124730)"
+
+[[sources]]
+kind = "guild_card"
+captured_on = "2026-09-15"
+note = "page 6/7 Bestiaire, vues Chasses et Captures (photos 20260915_124909 a 125009)"
+
+[[sources]]
+kind = "guild_card"
+captured_on = "2026-09-15"
+note = "page 2/7 Utilisation des armes (photo 20260915_124719) ; correspondance icone -> arme fournie par l'utilisateur"

@@ -86,5 +86,6 @@ category = "ranged"
 # TODO: confirmer le nom francais exact a l'ecran.
 [weapons.prowler]
 name_en = "Prowler"
+name_fr = "Chasseur Félyne"
 category = "special"
 introduced = "mhgen"

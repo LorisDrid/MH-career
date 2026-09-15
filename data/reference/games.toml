@@ -31,7 +31,7 @@ played_to = "2016-07"
 
 [games.mhgen]
 title = "Monster Hunter Generations"
-short_title = "Generations"
+short_title = "MHGen"
 platform = "nintendo_3ds"
 generation = 4
 status = "finished"
@@ -47,7 +47,7 @@ status = "finished"
 
 [games.mhrise]
 title = "Monster Hunter Rise"
-short_title = "Rise"
+short_title = "MHRise"
 # Game Pass sur PC : les captures sont des PNG Windows et la carte affiche un
 # Gamertag. Ce n'est donc pas la version console.
 platform = "pc"
@@ -56,7 +56,7 @@ status = "finished"
 
 [games.mhwilds]
 title = "Monster Hunter Wilds"
-short_title = "Wilds"
+short_title = "MHWilds"
 platform = "pc"
 generation = 6
 status = "planned"

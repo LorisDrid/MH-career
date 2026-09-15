@@ -6,6 +6,7 @@ remplacable.
 """
 from __future__ import annotations
 
+import statistics
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -58,6 +59,93 @@ def format_playtime(minutes: int | None, precision: str | None) -> str | None:
     if precision == "hours":
         return f"{hours} h"
     return f"{hours} h {remainder:02d}"
+
+
+MATRIX_BINS = 5
+
+# Libellés français des catégories d'armes. L'identifiant reste la clé stable du
+# référentiel ; seule la présentation est traduite, et elle l'est ici parce que
+# les templates ne calculent rien.
+CATEGORY_FR = {"melee": "Mêlée", "ranged": "Distance", "special": "Spécial"}
+
+MONTHS_FR = ("janvier", "février", "mars", "avril", "mai", "juin", "juillet",
+             "août", "septembre", "octobre", "novembre", "décembre")
+
+
+def month_label(value: str | None) -> str | None:
+    """« 2016-07 » -> « juillet 2016 ».
+
+    Le format ISO reste la forme stockée : il se trie, il est sans ambiguïté et
+    il ne suppose aucune langue. Ce n'est pas pour autant une forme lisible, et
+    la conversion se fait ici parce que les templates ne calculent rien.
+    """
+    if not value:
+        return None
+    parts = value.split("-")
+    if len(parts) != 2:
+        return value
+    year, month = parts
+    if not (month.isdigit() and 1 <= int(month) <= 12):
+        return value
+    return f"{MONTHS_FR[int(month) - 1]} {year}"
+
+
+def quantile_edges(values, bins: int = MATRIX_BINS) -> list[int]:
+    """Bornes de paliers decoupees par quantiles, et non lineairement.
+
+    La distribution des chasses est tres dissymetrique : 123 pour Grand Jaggi,
+    1 pour pres de la moitie du bestiaire. Un decoupage lineaire tasserait tout
+    dans le premier palier et la matrice ne dirait plus rien. Les quantiles
+    repartissent les monstres sur toute la rampe.
+    """
+    known = sorted(v for v in values if v)
+    if len(known) < bins:
+        return sorted(set(known))[:-1]
+    cuts = statistics.quantiles(known, n=bins, method="inclusive")
+    # Des bornes identiques produiraient des paliers vides : on les fusionne.
+    return sorted({int(cut) for cut in cuts})
+
+
+def level_of(value: int | None, edges: list[int]) -> int | None:
+    """Palier de teinte, ou None pour un inconnu COMME pour un zero constate.
+
+    Un zero n'est pas teinte : la cellule affiche `0` sur fond neutre, et
+    l'inconnu affiche un tiret sur le meme fond. C'est le TEXTE qui porte la
+    distinction, la couleur ne porte que la magnitude — la teinter reviendrait
+    a encoder deux choses sur un seul canal.
+    """
+    if not value:
+        return None
+    return sum(1 for edge in edges if value > edge)
+
+
+def scale_labels(edges: list[int]) -> list[str]:
+    """Intitules des paliers, pour que la legende annonce des intervalles REELS.
+
+    Une rampe sans echelle ne se lit pas : le lecteur voit des nuances sans
+    savoir ce qu'elles valent. Calcule ici et non dans le template, ou aucun
+    calcul n'a sa place.
+    """
+    if not edges:
+        return []
+    labels, low = [], 1
+    for edge in edges:
+        labels.append(str(low) if low == edge else f"{low}–{edge}")
+        low = edge + 1
+    labels.append(f"{low}+")
+    return labels
+
+
+def fraction(value: int | None, maximum: int | None) -> float | None:
+    """Part de la valeur maximale, pour piloter la longueur d'une barre.
+
+    Lineaire a dessein : la longueur d'une barre doit rester proportionnelle a
+    la valeur. Une echelle compressee rendrait la longue traine plus lisible au
+    prix d'un mensonge sur les proportions.
+    """
+    if value is None or not maximum or maximum <= 0:
+        return None
+    return round(value / maximum, 4)
 
 
 def game_order(ref: Reference):
@@ -123,17 +211,31 @@ def build_games(ref: Reference, games: dict[str, GameData]) -> list[dict]:
             "platform_name": platform.name if platform else game.platform,
             "generation": game.generation,
             "released": game.released,
-            "played_from": game.played_from,
-            "played_to": game.played_to,
+            "played_from": month_label(game.played_from),
+            "played_to": month_label(game.played_to),
             "status": game.status,
             "has_data": data is not None and (data.has_progress or bool(hunts)),
             "progress": progress,
             "sources": [vars(s) for s in data.sources] if data else [],
-            "monsters_recorded": len(hunts),
+            # Aucune ligne de chasse ne veut pas dire « zéro monstre » : cela
+            # veut dire que le bestiaire de ce jeu n'a pas encore été relevé.
+            # Afficher 0 ici, à côté de deux tirets, inverserait la convention
+            # que tout le reste de la chaîne s'applique à tenir.
+            "monsters_recorded": len(hunts) if hunts else None,
             "total_hunted": sum_or_none(h.hunted for h in hunts),
             "total_captured": sum_or_none(h.captured for h in hunts),
             "top_monsters": ranked[:5],
         })
+
+    # Barres du tableau des jeux, et barres des monstres les plus chasses de
+    # chaque fiche. Normalisees separement : comparer un jeu a un monstre
+    # n'aurait aucun sens.
+    top_game = max((row["total_hunted"] or 0) for row in payload) if payload else 0
+    for row in payload:
+        row["bar"] = fraction(row["total_hunted"], top_game)
+        top_monster = max((m["hunted"] or 0) for m in row["top_monsters"])             if row["top_monsters"] else 0
+        for monster in row["top_monsters"]:
+            monster["bar"] = fraction(monster["hunted"], top_monster)
     return payload
 
 
@@ -198,6 +300,14 @@ def build_bestiary(ref: Reference, games: dict[str, GameData]) -> list[dict]:
     bestiary.sort(key=lambda row: (row["total_hunted"] is None,
                                    -(row["total_hunted"] or 0),
                                    row["name_fr"]))
+
+    edges = quantile_edges(v for row in bestiary for v in row["per_game"].values())
+    top = max((row["total_hunted"] or 0) for row in bestiary)
+    for row in bestiary:
+        row["per_game_level"] = {
+            gid: level_of(value, edges) for gid, value in row["per_game"].items()
+        }
+        row["bar"] = fraction(row["total_hunted"], top)
     return bestiary
 
 
@@ -218,7 +328,7 @@ def build_weapons(ref: Reference, games: dict[str, GameData]) -> list[dict]:
             "id": weapon_id,
             "name_en": weapon.name_en,
             "name_fr": weapon.name_fr,
-            "category": weapon.category,
+            "category": CATEGORY_FR.get(weapon.category, weapon.category),
             "introduced": weapon.introduced,
             "per_game": per_game,
             # Nomme "score" et non "total" a dessein : la definition de `uses`
@@ -226,6 +336,10 @@ def build_weapons(ref: Reference, games: dict[str, GameData]) -> list[dict]:
             # total comparable (voir docs/DATA-MODEL.md).
             "usage_score": sum_or_none(per_game.values()),
         })
+
+    top = max((row["usage_score"] or 0) for row in payload) if payload else 0
+    for row in payload:
+        row["bar"] = fraction(row["usage_score"], top)
     return payload
 
 
@@ -234,11 +348,15 @@ def build_timeline(ref: Reference) -> list[dict]:
     for game_id in game_order(ref):
         game = ref.games[game_id]
         if game.played_from:
-            events.append({"date": game.played_from, "game": game_id,
-                           "label": game.short_title, "kind": "start"})
+            events.append({"date": game.played_from,
+                           "date_label": month_label(game.played_from),
+                           "game": game_id, "label": game.short_title,
+                           "kind": "start", "kind_label": "première session"})
         if game.played_to:
-            events.append({"date": game.played_to, "game": game_id,
-                           "label": game.short_title, "kind": "end"})
+            events.append({"date": game.played_to,
+                           "date_label": month_label(game.played_to),
+                           "game": game_id, "label": game.short_title,
+                           "kind": "end", "kind_label": "dernière session"})
     return sorted(events, key=lambda e: e["date"])
 
 
@@ -290,6 +408,7 @@ def build_totals(ref: Reference, games: dict[str, GameData]) -> dict:
 
 def build_site(ref: Reference, games: dict[str, GameData]) -> dict:
     games_payload = build_games(ref, games)
+    bestiary = build_bestiary(ref, games)
     return {
         "meta": {
             "schema_version": SCHEMA_VERSION,
@@ -303,7 +422,12 @@ def build_site(ref: Reference, games: dict[str, GameData]) -> dict:
         # Ordre des colonnes des tableaux croises : garanti identique aux cles
         # de `per_game` de chaque ligne du bestiaire et des armes.
         "matrix_games": [gid for gid in game_order(ref) if gid in games],
-        "bestiary": build_bestiary(ref, games),
+        "bestiary": bestiary,
+        # Bornes des paliers, pour que la legende annonce des intervalles reels
+        # plutot que des nuances sans echelle.
+        "matrix_scale": scale_labels(
+            quantile_edges(v for row in bestiary for v in row["per_game"].values())
+        ),
         "weapons": build_weapons(ref, games),
         "timeline": build_timeline(ref),
     }

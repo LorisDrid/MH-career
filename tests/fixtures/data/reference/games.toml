@@ -6,3 +6,12 @@ generation = 1
 status = "finished"
 played_from = "2020-01"
 played_to = "2020-06"
+
+# Jeu declare mais jamais saisi : c'est le cas qui verifie qu'un bestiaire
+# absent se lit « inconnu » et non « zero ».
+[games.test_game_z]
+title = "Test Game Z"
+short_title = "TGZ"
+platform = "test_platform"
+generation = 2
+status = "planned"

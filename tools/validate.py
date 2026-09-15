@@ -142,13 +142,31 @@ def validate_reference(ref: Reference, root: Path, report: Report) -> None:
                 f"attendu {' | '.join(VARIANT_TYPES)}",
             )
 
+    # Deux entrees portant le meme nom francais sont presque toujours un doublon
+    # accidentel. Le controle est indispensable des qu'il y a plusieurs jeux :
+    # rien d'autre ne l'attraperait, deux identifiants distincts etant tous deux
+    # valides, et le bestiaire cumule afficherait alors deux lignes au lieu d'une
+    # - soit l'inverse exact du but du projet.
+    by_name: dict[str, list[str]] = {}
+    for monster_id, monster in ref.monsters.items():
+        by_name.setdefault(monster.name_fr.strip().casefold(), []).append(monster_id)
+    for ids in by_name.values():
+        if len(ids) > 1:
+            names = ", ".join(sorted(ids))
+            report.error(
+                where,
+                f"nom '{ref.monsters[ids[0]].name_fr}' porte par {len(ids)} entrees "
+                f"({names}) : un monstre partage entre plusieurs jeux doit "
+                f"reutiliser le MEME identifiant, pas en creer un par jeu",
+            )
+
     where = f"{REFERENCE_DIR}/weapons.toml"
     for weapon_id, weapon in ref.weapons.items():
         _check_id(weapon_id, where, "arme", report)
         if weapon_id not in WEAPON_IDS:
             report.error(
                 where,
-                f"arme '{weapon_id}' hors des 14 types connus"
+                f"arme '{weapon_id}' hors du referentiel connu"
                 f"{suggest(weapon_id, WEAPON_IDS)}",
             )
         _check_reference_key(weapon.introduced, ref.games, where,

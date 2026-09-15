@@ -78,3 +78,13 @@ category = "ranged"
 name_fr = "Arc"
 name_en = "Bow"
 category = "ranged"
+
+# 15e entree, hors des 14 types canoniques : Generations compte le mode
+# Chasseur Felyne dans sa propre page "Utilisation des armes". Le separer
+# trahirait la source. `introduced` fait afficher "-" sur les jeux anterieurs,
+# ou le mode n'existait pas, plutot qu'un zero trompeur.
+# TODO: confirmer le nom francais exact a l'ecran.
+[weapons.prowler]
+name_en = "Prowler"
+category = "special"
+introduced = "mhgen"

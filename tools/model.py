@@ -26,6 +26,9 @@ WEAPON_IDS = (
     "light_bowgun",
     "heavy_bowgun",
     "bow",
+    # Pas un type d'arme de la licence, mais Generations le compte dans sa page
+    # "Utilisation des armes" : l'exclure perdrait une donnee affichee.
+    "prowler",
 )
 
 PRECISIONS = ("minutes", "hours")

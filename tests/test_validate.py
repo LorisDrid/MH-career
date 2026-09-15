@@ -62,6 +62,21 @@ class IdentifierTest(unittest.TestCase):
         assert_mentions(self, errors_for(ref, base_games()), "identifiant invalide")
 
 
+class DuplicateMonsterTest(unittest.TestCase):
+    """Le risque propre au multi-jeux : recreer un monstre deja present."""
+
+    def test_same_french_name_on_two_ids_is_rejected(self) -> None:
+        ref = base_reference()
+        ref.monsters["test_monster_a_bis"] = dataclasses.replace(
+            ref.monsters["test_monster_a"], id="test_monster_a_bis"
+        )
+        messages = errors_for(ref, base_games())
+        assert_mentions(self, messages, "test_monster_a_bis", "MEME identifiant")
+
+    def test_distinct_names_pass(self) -> None:
+        self.assertEqual(errors_for(base_reference(), base_games()), [])
+
+
 class ReferentialIntegrityTest(unittest.TestCase):
     def test_unknown_monster_id_is_reported_with_a_suggestion(self) -> None:
         games = base_games()

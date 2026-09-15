@@ -25,7 +25,7 @@ Jeux couverts :
 |---|---|---|---|
 | `mh3u` | Monster Hunter 3 Ultimate | Nintendo 3DS | terminé, figé |
 | `mh4u` | Monster Hunter 4 Ultimate | Nintendo 3DS | terminé, figé |
-| `mhgu` | Monster Hunter Generations Ultimate | Nintendo Switch | terminé, figé |
+| `mhgen` | Monster Hunter Generations | Nintendo 3DS | terminé, figé |
 | `mhw` | Monster Hunter: World | PlayStation 4 | terminé, figé |
 | `mhrise` | Monster Hunter Rise | Xbox Game Pass | terminé, figé |
 | `mhwilds` | Monster Hunter Wilds | Steam | à venir, évolutif |
@@ -253,7 +253,7 @@ MH-career/
 Trois couches, strictement séparées. Détail complet dans [docs/DATA-MODEL.md](docs/DATA-MODEL.md).
 
 1. **Référentiels canoniques** (`data/reference/`) — le vocabulaire partagé :
-   monstres, armes, espèces, jeux, plateformes. Un ID stable par entité, valable
+   monstres, armes (les 14 types plus le Chasseur Félyne de Generations), espèces, jeux, plateformes. Un ID stable par entité, valable
    pour toute la licence. C'est ce qui permet de croiser MH3U et Wilds.
 2. **Données brutes par jeu** (`data/games/<id>/`) — uniquement ce que le jeu
    affiche réellement. Aucun schéma uniforme imposé : les jeux MH n'exposent pas
@@ -383,7 +383,7 @@ cinq jeux à moitié les disperse.
 
 ### Phase 3 — Les autres jeux
 
-`mh3u`, `mhgu`, `mhw`, `mhrise`. Le référentiel de monstres se complète au fil de
+`mh3u`, `mhgen`, `mhw`, `mhrise`. Le référentiel de monstres se complète au fil de
 l'eau. Phase longue et ingrate : l'étaler est un choix assumé, pas un retard.
 
 ### Phase 4 — Vues croisées

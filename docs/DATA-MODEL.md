@@ -151,7 +151,11 @@ monstres de la licence avant d'en avoir besoin serait du travail de wiki, hors s
 
 ### `weapons.toml`
 
-Les 14 types d'armes.
+Les 14 types d'armes de la licence, **plus `prowler`** : Generations compte le
+mode Chasseur Félyne dans sa propre page « Utilisation des armes », et le séparer
+trahirait la source. C'est exactement l'usage du champ `introduced` — la ligne
+s'affiche « — » sur les jeux antérieurs, où le mode n'existait pas, au lieu d'un
+zéro trompeur.
 
 ```toml
 [weapons.great_sword]
@@ -163,7 +167,7 @@ introduced = "mh1"
 
 IDs : `great_sword`, `long_sword`, `sword_and_shield`, `dual_blades`, `hammer`,
 `hunting_horn`, `lance`, `gunlance`, `switch_axe`, `charge_blade`, `insect_glaive`,
-`light_bowgun`, `heavy_bowgun`, `bow`.
+`light_bowgun`, `heavy_bowgun`, `bow`, et `prowler`.
 
 Le champ `introduced` permet de ne pas afficher une arme sur un jeu antérieur à son
 apparition — une case vide et une arme inexistante ne se rendent pas pareil. Les
@@ -340,6 +344,11 @@ stylables en CSS (thème clair/sombre) et peuvent réagir au survol sans JavaScr
 - IDs uniques dans chaque référentiel
 - IDs conformes à `^[a-z][a-z0-9_]*$` — c'est ce contrôle qui interdit les tirets
 - pas de `monster_id` en doublon dans un même `hunts.csv`
+- **deux monstres ne portent pas le même `name_fr`** — c'est presque toujours un
+  doublon accidentel, et rien d'autre ne l'attraperait : deux identifiants
+  distincts sont chacun valides, mais le bestiaire cumulé afficherait deux lignes
+  au lieu d'une. Un monstre partagé entre plusieurs jeux doit réutiliser le
+  **même** identifiant.
 
 **Cohérence des valeurs**
 - compteurs entiers `>= 0`

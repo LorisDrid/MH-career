@@ -16,6 +16,8 @@ short_title = "MH3U"
 platform = "nintendo_3ds"
 generation = 3
 status = "finished"
+# Derniere session datee par le Journal chasseur (2025/08/22).
+played_to = "2025-08"
 
 [games.mh4u]
 title = "Monster Hunter 4 Ultimate"
@@ -27,10 +29,10 @@ status = "finished"
 # inconnu : le journal ne conserve que les sessions recentes.
 played_to = "2016-07"
 
-[games.mhgu]
-title = "Monster Hunter Generations Ultimate"
-short_title = "MHGU"
-platform = "nintendo_switch"
+[games.mhgen]
+title = "Monster Hunter Generations"
+short_title = "Generations"
+platform = "nintendo_3ds"
 generation = 4
 status = "finished"
 

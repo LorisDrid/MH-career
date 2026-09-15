@@ -35,6 +35,17 @@ eux, sont bien renseignés. Ces six chasses ne sont donc rattachables à aucun
 monstre : plutôt que d'inventer une entrée, elles sont laissées de côté. Le total
 MH3U affiché sur ce site est en conséquence inférieur de 6 à celui de la console.
 
+**Rise — pas d'usage des armes.** Contrairement aux trois jeux 3DS, la Guild Card
+de Rise n'affiche aucun histogramme d'utilisation. Elle propose seulement des
+« armes préférées » que le joueur coche lui-même : une préférence déclarée, pas un
+compteur mesuré. Rien n'est donc enregistré pour ce jeu.
+
+**Rise — « `--` » ne veut pas dire zéro.** Rise distingue explicitement `0`
+(zéro constaté) de `--` (compteur sans objet) : les dragons anciens et les
+monstres Apex ne peuvent pas être capturés. Les jeux 3DS, eux, utilisaient des
+tirets pour signifier zéro. La même notation à l'écran recouvre donc deux sens
+selon le jeu, et la transcription tient compte de cette différence.
+
 **MH4U — date de début inconnue.** Le journal de chasse ne conserve que les
 sessions récentes. On sait quand la partie s'est arrêtée, pas quand elle a
 commencé.

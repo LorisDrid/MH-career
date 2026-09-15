@@ -1,0 +1,56 @@
+monster_id,hunted,captured,notes
+great_izuchi,13,0,
+great_baggi,7,1,
+kulu_ya_ku,11,0,
+great_wroggi,8,0,
+arzuros,8,1,
+lagombi,7,1,
+volvidon,6,0,
+aknosom,7,1,
+royal_ludroth,10,0,
+barroth,8,0,
+daimyo_hermitaur,4,1,
+khezu,10,0,
+tetranadon,10,1,
+bishaten,8,0,
+bishaten_blood,4,0,
+pukei_pukei,5,0,
+jyuratodus,7,1,
+basarios,7,0,
+somnacanth,10,1,
+somnacanth_aurora,1,0,
+rathian,11,2,
+barioth,3,0,
+tobi_kadachi,11,0,
+magnamalo,11,3,
+anjanath,11,1,
+nargacuga,7,2,
+mizutsune,10,1,
+goss_harag,5,1,
+garangolm,1,0,
+shogun_ceanataur,1,0,
+rathalos,9,1,
+almudron,4,0,
+almudron_magma,1,0,
+zinogre,9,1,
+lunagaron,1,1,
+astalos,1,1,
+espinas,1,0,
+gore_magala,8,4,
+seregios,2,0,
+tigrex,5,1,
+diablos,5,1,
+rakna_kadaki,3,1,
+rakna_kadaki_fire,1,1,
+kushala_daora,1,,capture sans objet : le jeu affiche -- et non 0
+chameleos,1,,capture sans objet : le jeu affiche -- et non 0
+teostra,1,,capture sans objet : le jeu affiche -- et non 0
+malzeno,1,,capture sans objet : le jeu affiche -- et non 0
+shagaru_magala,1,,capture sans objet : le jeu affiche -- et non 0
+rajang,5,3,
+bazelgeuse,4,1,
+ibushi,4,,capture sans objet : le jeu affiche -- et non 0
+narwa,1,,capture sans objet : le jeu affiche -- et non 0
+narwa_allmother,1,,capture sans objet : le jeu affiche -- et non 0
+valstrax_crimson,1,,capture sans objet : le jeu affiche -- et non 0
+arzuros_apex,2,,capture sans objet : le jeu affiche -- et non 0

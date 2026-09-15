@@ -327,3 +327,135 @@ name_fr = "Kushala Daora"
 [monsters.chameleos]
 name_en = "Chameleos"
 name_fr = "Chameleos"
+
+# Ajoutes le 2026-09-15 depuis Rise (Guild Card 8/8, Moments de triomphe).
+
+[monsters.great_izuchi]
+name_en = "Great Izuchi"
+name_fr = "Grand Izuchi"
+
+[monsters.kulu_ya_ku]
+name_en = "Kulu-Ya-Ku"
+name_fr = "Kulu-Ya-Ku"
+
+[monsters.aknosom]
+name_en = "Aknosom"
+name_fr = "Aknosom"
+
+[monsters.tetranadon]
+name_en = "Tetranadon"
+name_fr = "Tetranadon"
+
+[monsters.bishaten]
+name_en = "Bishaten"
+name_fr = "Bishaten"
+
+[monsters.bishaten_blood]
+name_en = "Blood Orange Bishaten"
+name_fr = "Bishaten sanguin"
+base = "bishaten"
+variant_type = "subspecies"
+
+[monsters.pukei_pukei]
+name_en = "Pukei-Pukei"
+name_fr = "Pukei-Pukei"
+
+[monsters.jyuratodus]
+name_en = "Jyuratodus"
+name_fr = "Jyuratodus"
+
+[monsters.somnacanth]
+name_en = "Somnacanth"
+name_fr = "Somnacanth"
+
+[monsters.somnacanth_aurora]
+name_en = "Aurora Somnacanth"
+name_fr = "Somnacanth aurore"
+base = "somnacanth"
+variant_type = "subspecies"
+
+[monsters.tobi_kadachi]
+name_en = "Tobi-Kadachi"
+name_fr = "Tobi-Kadachi"
+
+[monsters.magnamalo]
+name_en = "Magnamalo"
+name_fr = "Magnamalo"
+
+[monsters.anjanath]
+name_en = "Anjanath"
+name_fr = "Anjanath"
+
+[monsters.goss_harag]
+name_en = "Goss Harag"
+name_fr = "Goss Harag"
+
+[monsters.garangolm]
+name_en = "Garangolm"
+name_fr = "Garangolm"
+
+[monsters.almudron]
+name_en = "Almudron"
+name_fr = "Almudron"
+
+[monsters.almudron_magma]
+name_en = "Magma Almudron"
+name_fr = "Almudron magma"
+base = "almudron"
+variant_type = "subspecies"
+
+[monsters.lunagaron]
+name_en = "Lunagaron"
+name_fr = "Lunagaron"
+
+[monsters.espinas]
+name_en = "Espinas"
+name_fr = "Espinas"
+
+[monsters.rakna_kadaki]
+name_en = "Rakna-Kadaki"
+name_fr = "Rakna-Kadaki"
+
+[monsters.rakna_kadaki_fire]
+name_en = "Pyre Rakna-Kadaki"
+name_fr = "Rakna-Kadaki de feu"
+base = "rakna_kadaki"
+variant_type = "subspecies"
+
+[monsters.teostra]
+name_en = "Teostra"
+name_fr = "Teostra"
+
+[monsters.malzeno]
+name_en = "Malzeno"
+name_fr = "Malzeno"
+
+[monsters.rajang]
+name_en = "Rajang"
+name_fr = "Rajang"
+
+[monsters.bazelgeuse]
+name_en = "Bazelgeuse"
+name_fr = "Bazelgeuse"
+
+[monsters.ibushi]
+name_en = "Wind Serpent Ibushi"
+name_fr = "Ibushi du vent"
+
+[monsters.narwa]
+name_en = "Thunder Serpent Narwa"
+name_fr = "Narwa du tonnerre"
+
+[monsters.narwa_allmother]
+name_en = "Narwa the Allmother"
+name_fr = "Narwa la Mère de tous"
+
+[monsters.valstrax_crimson]
+name_en = "Crimson Glow Valstrax"
+name_fr = "Valstrax écarlate"
+
+[monsters.arzuros_apex]
+name_en = "Apex Arzuros"
+name_fr = "Arzuros supérieur"
+base = "arzuros"
+variant_type = "apex"

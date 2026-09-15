@@ -1,0 +1,54 @@
+# Monster Hunter Rise (+ Sunbreak) - releve du 2026-09-15.
+#
+# Captures d'ecran PC (Game Pass), et non photos d'ecran : la lecture est donc
+# exacte, sans risque de confusion de chiffres.
+#
+# Le Gamertag affiche sur la carte n'est PAS enregistre : c'est un identifiant
+# personnel et ce depot est public.
+#
+# Verification croisee : le detail par monstre totalise 295 chasses et 34
+# captures, tandis que le journal d'activites annonce 261 eliminations et 34
+# captures. 295 - 34 = 261 : les deux ecrans concordent, "elimination" designant
+# une chasse qui ne s'est pas terminee par une capture.
+
+game = "mhrise"
+
+[progress]
+hunter_name = "Shimada"
+title = "Combattant sans Épée"
+hunter_rank = 116
+master_rank = 5
+# Le journal d'activites n'affiche que des heures entieres, sans minutes.
+playtime_minutes = 5340
+playtime_precision = "hours"
+
+# Ventilation de la Guild Card 2/8. Rise ajoute le rang Maitre (Sunbreak) et
+# les quetes Parangon, absentes de tous les autres jeux de la collection.
+[progress.quests]
+village = 56
+gd_camp_low = 22
+gd_camp_high = 68
+gd_camp_mr = 74
+calamity = 2
+arena = 3
+paragon = 6
+
+[[sources]]
+kind = "guild_card"
+captured_on = "2026-09-15"
+note = "page 1/8 : nom, RC 116, RM 5 (capture 142053)"
+
+[[sources]]
+kind = "guild_card"
+captured_on = "2026-09-15"
+note = "page 2/8 : ventilation des quetes (capture 142111)"
+
+[[sources]]
+kind = "platform_stats"
+captured_on = "2026-09-15"
+note = "page 3/8 Journal d'activites : 89 h, 261 eliminations, 34 captures, 55 types de monstres (capture 142119)"
+
+[[sources]]
+kind = "hunter_notes"
+captured_on = "2026-09-15"
+note = "page 8/8 Moments de triomphe, 11 sous-pages (captures 142209 a 142303)"

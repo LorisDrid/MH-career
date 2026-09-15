@@ -131,10 +131,15 @@ variant_type = "subspecies" # subspecies | rare_species | deviant | apex | varia
 |---|---|---|
 | `name_en` | oui | nom anglais, source des IDs |
 | `name_fr` | oui | nom français, affiché sur le site |
-| `species` | oui | clé de `species.toml` |
+| `species` | **non** | clé de `species.toml` — voir ci-dessous |
 | `debut` | non | ID du jeu de première apparition |
 | `base` | non | présent **uniquement** sur une variante |
 | `variant_type` | non | obligatoire si `base` est présent |
+
+`species` est **optionnelle à dessein** : aucune Guild Card n'affiche l'espèce
+d'un monstre. L'exiger obligerait à la tirer d'une source externe au jeu, ce que
+le principe « on ne stocke que ce que le jeu affiche » proscrit. On la renseigne
+quand on l'a vérifiée, jamais par défaut.
 
 La relation `base` est le pivot du bestiaire cumulé : elle permet de totaliser
 « tous les Rathalos confondus » sans table de correspondance ad hoc, tout en
@@ -174,12 +179,24 @@ valeurs exactes sont à vérifier à la saisie plutôt qu'à supposer.
 game = "mh4u"
 
 [progress]
-hunter_rank = 142
-playtime_minutes = 24755
+hunter_name = "loris kill"
+title = "Aventurier en Volto-hache"
+hunter_rank = 4
+playtime_minutes = 5322
 playtime_precision = "minutes"
-quests_completed = 830
-# quests_failed absent : non affiché par ce jeu
 primary_weapon = "long_sword"
+
+# Ventilation telle que la Guild Card l'affiche, et non un total unique : les
+# jeux découpent leurs quêtes différemment. Les clés sont propres à chaque jeu.
+# Le total n'est jamais saisi, il est calculé à l'agrégation.
+[progress.quests]
+caravan_low = 67
+caravan_high = 14
+guild_hall_low = 59
+guild_hall_high = 0
+g_rank = 0
+guild_quests = 0
+arena = 8
 
 [[sources]]
 kind = "guild_card"       # guild_card | hunter_notes | hunting_log | platform_stats | api
@@ -283,6 +300,22 @@ Règles :
 - `schema_version` est incrémenté à chaque changement cassant de structure, pour que
   les templates puissent échouer explicitement plutôt que d'afficher du vide.
 
+### Exports plats
+
+`hunts-all.csv` et `weapons-all.csv` reprennent toutes les observations au
+**format long** : une ligne par couple (jeu, monstre), le jeu en colonne. Ils
+existent pour être ouverts au tableur.
+
+Les sources, elles, restent **découpées par jeu**. La forme de saisie et la forme
+d'analyse sont deux choses différentes : garder un fichier par jeu rend
+structurellement impossible qu'une erreur de saisie sur un jeu en corrompe un
+autre — ce que le validateur ne pourrait pas rattraper, un mauvais chiffre restant
+un chiffre valide. L'export rend la vue croisée sans payer ce risque.
+
+`base_form` y est résolue, ce qui permet de regrouper les variantes dans un
+tableur sans connaître le référentiel. Une valeur inconnue reste une **cellule
+vide**, jamais un zéro.
+
 ### `charts/*.svg`
 
 SVG rendus au build, inlinés dans les templates via
@@ -313,6 +346,7 @@ stylables en CSS (thème clair/sombre) et peuvent réagir au survol sans JavaScr
 - `captured <= hunted` quand les deux sont renseignés
 - `variant_type` présent si et seulement si `base` l'est
 - `playtime_precision` présent si `playtime_minutes` l'est
+- clés de `[progress.quests]` en snake_case, valeurs entières `>= 0`
 - `played_from <= played_to`, format `YYYY-MM`
 - `captured_on` au format `YYYY-MM-DD`, pas dans le futur
 

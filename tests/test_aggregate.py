@@ -72,7 +72,7 @@ class EmptyProjectTest(unittest.TestCase):
         self.assertEqual(self.totals["monsters_recorded"], 0)
 
     def test_sums_of_unknown_values_stay_null(self) -> None:
-        for key in ("playtime_minutes", "hunted", "captured", "quests_completed"):
+        for key in ("playtime_minutes", "hunted", "captured", "quests_total"):
             with self.subTest(key=key):
                 self.assertIsNone(self.totals[key])
 

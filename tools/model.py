@@ -64,10 +64,14 @@ class Species:
 
 @dataclass(frozen=True)
 class Monster:
+    """L'espece est OPTIONNELLE : aucune Guild Card ne l'affiche, donc l'exiger
+    obligerait a la tirer d'une source externe au jeu. On la renseigne quand on
+    l'a verifiee, jamais par defaut."""
+
     id: str
     name_en: str
     name_fr: str
-    species: str
+    species: str | None = None
     debut: str | None = None
     base: str | None = None
     variant_type: str | None = None
@@ -115,17 +119,26 @@ class WeaponUse:
 
 @dataclass
 class Progress:
-    """Tout est optionnel : on n'ecrit que ce que le jeu affiche reellement."""
+    """Tout est optionnel : on n'ecrit que ce que le jeu affiche reellement.
+
+    `quests` est une table categorie -> nombre, et non un total unique : les
+    jeux ventilent leurs quetes differemment (MH4U distingue caravane, grande
+    salle, rang G, arene...). Stocker le detail affiche plutot qu'une somme
+    evite d'ecrire un nombre qui n'apparait sur aucun ecran. Le total est
+    calcule a l'agregation.
+
+    Un jeu qui n'afficherait qu'un total s'ecrit quests = { total = 148 }.
+    """
 
     hunter_rank: int | None = None
     master_rank: int | None = None
     village_rank: int | None = None
     playtime_minutes: int | None = None
     playtime_precision: str | None = None
-    quests_completed: int | None = None
-    quests_failed: int | None = None
+    quests: dict[str, int] = field(default_factory=dict)
     primary_weapon: str | None = None
     hunter_name: str | None = None
+    title: str | None = None
 
 
 @dataclass
@@ -138,7 +151,11 @@ class GameData:
 
     @property
     def has_progress(self) -> bool:
-        return any(v is not None for v in vars(self.progress).values())
+        # Un dict vide vaut absence ; 0 reste une valeur presente (zero constate).
+        return any(
+            bool(value) if isinstance(value, dict) else value is not None
+            for value in vars(self.progress).values()
+        )
 
 
 @dataclass

@@ -50,7 +50,7 @@ def format_playtime(minutes: int | None, precision: str | None) -> str | None:
     return f"{hours} h {remainder:02d}"
 
 
-def _game_order(ref: Reference):
+def game_order(ref: Reference):
     """Ordre chronologique de carriere, avec repli sur la generation."""
 
     def key(game_id: str):
@@ -78,7 +78,7 @@ def _base_form(ref: Reference, monster_id: str) -> str:
 
 def build_games(ref: Reference, games: dict[str, GameData]) -> list[dict]:
     payload: list[dict] = []
-    for game_id in _game_order(ref):
+    for game_id in game_order(ref):
         game = ref.games[game_id]
         data = games.get(game_id)
         platform = ref.platforms.get(game.platform)
@@ -90,6 +90,9 @@ def build_games(ref: Reference, games: dict[str, GameData]) -> list[dict]:
         progress["playtime_display"] = format_playtime(
             progress.get("playtime_minutes"), progress.get("playtime_precision")
         )
+        # Total derive de la ventilation affichee, jamais saisi (voir Progress).
+        quests = progress.get("quests") or {}
+        progress["quests_total"] = sum(quests.values()) if quests else None
 
         hunts = data.hunts if data else []
         ranked = sorted(
@@ -142,7 +145,7 @@ def build_bestiary(ref: Reference, games: dict[str, GameData]) -> list[dict]:
     # jeu saisi, quitte a ce qu'elle soit None. Sans cela, les templates
     # devraient gerer des cles absentes, ce qui reintroduirait de la logique
     # dans Tera.
-    matrix = [gid for gid in _game_order(ref) if gid in per_game]
+    matrix = [gid for gid in game_order(ref) if gid in per_game]
     bestiary: list[dict] = []
     for base_id, form_ids in groups.items():
         base = ref.monsters.get(base_id)
@@ -188,7 +191,7 @@ def build_bestiary(ref: Reference, games: dict[str, GameData]) -> list[dict]:
 
 
 def build_weapons(ref: Reference, games: dict[str, GameData]) -> list[dict]:
-    ordered_games = _game_order(ref)
+    ordered_games = game_order(ref)
     uses = {
         gid: {u.weapon_id: u.uses for u in data.weapon_uses}
         for gid, data in games.items()
@@ -217,7 +220,7 @@ def build_weapons(ref: Reference, games: dict[str, GameData]) -> list[dict]:
 
 def build_timeline(ref: Reference) -> list[dict]:
     events: list[dict] = []
-    for game_id in _game_order(ref):
+    for game_id in game_order(ref):
         game = ref.games[game_id]
         if game.played_from:
             events.append({"date": game.played_from, "game": game_id,
@@ -266,7 +269,9 @@ def build_totals(ref: Reference, games: dict[str, GameData]) -> dict:
         "playtime_display": format_playtime(playtime, precision),
         "hunted": sum_or_none(h.hunted for h in all_hunts),
         "captured": sum_or_none(h.captured for h in all_hunts),
-        "quests_completed": sum_or_none(p.quests_completed for p in progresses),
+        "quests_total": sum_or_none(
+            sum(p.quests.values()) if p.quests else None for p in progresses
+        ),
         "career_span": span,
     }
 
@@ -285,7 +290,7 @@ def build_site(ref: Reference, games: dict[str, GameData]) -> dict:
         "games_by_id": {row["id"]: row for row in games_payload},
         # Ordre des colonnes des tableaux croises : garanti identique aux cles
         # de `per_game` de chaque ligne du bestiaire et des armes.
-        "matrix_games": [gid for gid in _game_order(ref) if gid in games],
+        "matrix_games": [gid for gid in game_order(ref) if gid in games],
         "bestiary": build_bestiary(ref, games),
         "weapons": build_weapons(ref, games),
         "timeline": build_timeline(ref),

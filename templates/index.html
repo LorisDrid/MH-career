@@ -15,7 +15,7 @@
   {{ fmt::stat(label="chasses", v=data.totals.hunted, note="") }}
   {{ fmt::stat(label="captures", v=data.totals.captured, note="") }}
   {{ fmt::stat(label="monstres différents chassés", v=data.totals.distinct_monsters_hunted, note="") }}
-  {{ fmt::stat(label="quêtes accomplies", v=data.totals.quests_completed, note="") }}
+  {{ fmt::stat(label="quêtes accomplies", v=data.totals.quests_total, note="") }}
 </ul>
 
 {% if data.totals.games_with_data == 0 %}

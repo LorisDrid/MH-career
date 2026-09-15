@@ -174,11 +174,24 @@ def validate_game_data(
         ("master_rank", progress.master_rank),
         ("village_rank", progress.village_rank),
         ("playtime_minutes", progress.playtime_minutes),
-        ("quests_completed", progress.quests_completed),
-        ("quests_failed", progress.quests_failed),
     ):
         if value is not None and value < 0:
             report.error(meta, f"{label} : {value} est negatif")
+
+    if not isinstance(progress.quests, dict):
+        report.error(meta, "quests doit etre une table categorie = nombre")
+    else:
+        for category, value in progress.quests.items():
+            if not ID_RE.match(category):
+                report.error(
+                    meta,
+                    f"quests.{category} : categorie invalide, attendu snake_case "
+                    f"sans tiret ni accent",
+                )
+            if not isinstance(value, int) or isinstance(value, bool):
+                report.error(meta, f"quests.{category} : '{value}' n'est pas un entier")
+            elif value < 0:
+                report.error(meta, f"quests.{category} : {value} est negatif")
 
     if progress.playtime_minutes is not None and progress.playtime_precision is None:
         report.error(

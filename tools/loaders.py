@@ -96,7 +96,7 @@ _REFERENCE_SPECS = (
     ("species.toml", "species", Species,
      ("name_en", "name_fr"), (), "species"),
     ("monsters.toml", "monsters", Monster,
-     ("name_en", "name_fr", "species"), ("debut", "base", "variant_type"), "monsters"),
+     ("name_en", "name_fr"), ("species", "debut", "base", "variant_type"), "monsters"),
     ("weapons.toml", "weapons", Weapon,
      ("name_en",), ("name_fr", "category", "introduced"), "weapons"),
 )

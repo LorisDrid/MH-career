@@ -63,7 +63,7 @@ class GameDataLoadingTest(unittest.TestCase):
 
     def test_progress_and_sources_are_loaded(self) -> None:
         self.assertEqual(self.data.progress.hunter_rank, 7)
-        self.assertEqual(self.data.progress.quests_completed, 0)
+        self.assertEqual(self.data.progress.quests, {"test_category": 0})
         self.assertEqual(len(self.data.sources), 1)
         self.assertTrue(self.data.has_progress)
 

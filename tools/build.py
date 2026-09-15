@@ -15,6 +15,7 @@ import sys
 from pathlib import Path
 
 from tools.aggregate import build_site
+from tools.exports import write_all
 from tools.loaders import load_all_game_data, load_reference, repo_root
 from tools.report import Report
 from tools.validate import validate
@@ -47,12 +48,16 @@ def run(root: Path, *, check_only: bool = False, stream=sys.stdout) -> int:
         json.dumps(site, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
 
+    exported = write_all(root, ref, games)
+
     totals = site["totals"]
+    flat = ", ".join(f"{name} ({rows} lignes)" for name, rows in exported.items())
     print(
         f"\nEcrit {OUTPUT.as_posix()} : "
         f"{totals['games']} jeu(x) declare(s), "
         f"{totals['games_with_data']} avec donnees, "
-        f"{len(site['bestiary'])} monstre(s) au bestiaire.",
+        f"{len(site['bestiary'])} monstre(s) au bestiaire.\n"
+        f"Exports plats : {flat}",
         file=stream,
     )
     return 0

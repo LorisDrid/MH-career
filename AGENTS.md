@@ -218,6 +218,8 @@ MH-career/
 │   │       └── weapons.csv
 │   └── generated/             ← produit par build.py, jamais édité à la main
 │       ├── site.json
+│       ├── hunts-all.csv      ← toutes les chasses, format long, pour le tableur
+│       ├── weapons-all.csv
 │       └── charts/*.svg
 ├── tools/                     ← Python, stdlib uniquement
 │   ├── __init__.py            ← indispensable à l'exécution en `-m`
@@ -227,6 +229,7 @@ MH-career/
 │   ├── loaders.py             ← lecture TOML/CSV, avec numéros de ligne
 │   ├── validate.py            ← contrôles d'intégrité
 │   ├── aggregate.py           ← calculs inter-jeux
+│   ├── exports.py             ← exports plats CSV
 │   └── charts.py              ← rendu SVG (phase 4, pas encore écrit)
 ├── tests/
 │   ├── __init__.py

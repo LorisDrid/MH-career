@@ -4,7 +4,9 @@ game = "test_game_x"
 hunter_rank = 7
 playtime_minutes = 600
 playtime_precision = "minutes"
-quests_completed = 0
+
+[progress.quests]
+test_category = 0
 
 [[sources]]
 kind = "guild_card"

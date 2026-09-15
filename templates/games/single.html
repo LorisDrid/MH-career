@@ -17,7 +17,7 @@
 <ul class="stat-grid">
   {{ fmt::stat(label="rang de chasseur", v=game.progress.hunter_rank, note="") }}
   {{ fmt::stat(label="temps de jeu", v=game.progress.playtime_display,
-               note=game.progress.playtime_precision) }}
+               note=game.progress.playtime_note) }}
   {{ fmt::stat(label="quêtes accomplies", v=game.progress.quests_total, note="") }}
   {{ fmt::stat(label="chasses", v=game.total_hunted, note="") }}
   {{ fmt::stat(label="captures", v=game.total_captured, note="") }}

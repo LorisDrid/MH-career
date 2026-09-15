@@ -34,6 +34,16 @@ def coarsest_precision(precisions) -> str | None:
     return "hours" if "hours" in known else "minutes"
 
 
+def precision_label(precision: str | None) -> str | None:
+    """Libelle affichable de la precision, ou None quand il n'y a rien a dire.
+
+    La cle technique ("hours") ne doit jamais atteindre l'ecran : elle est en
+    anglais et n'explique rien. Une duree relevee a la minute n'appelle aucune
+    mention ; seule une valeur arrondie merite d'etre signalee.
+    """
+    return "arrondi à l'heure" if precision == "hours" else None
+
+
 def format_playtime(minutes: int | None, precision: str | None) -> str | None:
     """Rend une duree pour l'affichage, en respectant sa precision reelle.
 
@@ -93,6 +103,7 @@ def build_games(ref: Reference, games: dict[str, GameData]) -> list[dict]:
         # Total derive de la ventilation affichee, jamais saisi (voir Progress).
         quests = progress.get("quests") or {}
         progress["quests_total"] = sum(quests.values()) if quests else None
+        progress["playtime_note"] = precision_label(progress.get("playtime_precision"))
 
         hunts = data.hunts if data else []
         ranked = sorted(
@@ -267,6 +278,7 @@ def build_totals(ref: Reference, games: dict[str, GameData]) -> dict:
         "playtime_minutes": playtime,
         "playtime_precision": precision,
         "playtime_display": format_playtime(playtime, precision),
+        "playtime_note": precision_label(precision),
         "hunted": sum_or_none(h.hunted for h in all_hunts),
         "captured": sum_or_none(h.captured for h in all_hunts),
         "quests_total": sum_or_none(

@@ -11,7 +11,7 @@
 <ul class="stat-grid">
   {{ fmt::stat(label="jeux de la collection", v=data.totals.games, note="") }}
   {{ fmt::stat(label="temps de jeu cumulé", v=data.totals.playtime_display,
-               note=data.totals.playtime_precision) }}
+               note=data.totals.playtime_note) }}
   {{ fmt::stat(label="chasses", v=data.totals.hunted, note="") }}
   {{ fmt::stat(label="captures", v=data.totals.captured, note="") }}
   {{ fmt::stat(label="monstres différents chassés", v=data.totals.distinct_monsters_hunted, note="") }}

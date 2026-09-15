@@ -1,10 +1,14 @@
 # Configuration Zola.
 #
-# base_url DOIT inclure le sous-chemin /MH-career : le site est servi sous
-# https://lorisdrid.github.io/MH-career/ et non a la racine du domaine. Sans ce
-# sous-chemin, tous les liens internes et le CSS pointeraient vers la racine et
-# le site s'afficherait nu. L'erreur ne se voit pas en local avec `zola serve`.
-base_url = "https://lorisdrid.github.io/MH-career"
+# Le site est deploye sur Vercel, qui le sert a la RACINE de son domaine : il
+# n'y a donc plus de sous-chemin, et le piege classique du deploiement en
+# sous-repertoire disparait avec lui.
+#
+# Cette valeur ne sert qu'aux constructions locales. En deploiement,
+# tools/deploy.py passe --base-url a Zola en lisant l'URL de production dans
+# l'environnement Vercel, ce qui evite de dependre du nom que Vercel attribuera
+# au projet.
+base_url = "https://mh-career.vercel.app"
 
 title = "MH-career"
 description = "Archive personnelle de mes statistiques Monster Hunter"

@@ -3,6 +3,9 @@
 # Site genere par Zola
 public/
 
+# Binaire Zola telecharge par tools/deploy.py au deploiement
+bin/
+
 # Donnees generees par tools/build.py.
 # Ignorees car entierement reconstructibles depuis data/reference et data/games.
 # Alternative envisageable en phase 1 : les commiter rendrait les diffs de

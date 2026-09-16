@@ -7,8 +7,23 @@
    (games_by_id), pas par un filtrage dans le template. #}
 {% set game = data.games_by_id[page.slug] %}
 
+{% if game.id in config.extra.game_art %}
+{% set art = config.extra.game_art[game.id] %}
+<section class="game-hero" aria-labelledby="game-title">
+  <img class="game-hero__image" src="{{ get_url(path=art.image) | safe }}" alt="{{ art.alt }}" width="1536" height="1024" fetchpriority="high">
+  <div class="game-hero__shade" aria-hidden="true"></div>
+  <div class="game-hero__content">
+    <a class="game-hero__back" href="{{ get_url(path='@/games/_index.md') | safe }}">← La collection</a>
+    <p class="eyebrow">Carnet de guilde <span> / </span> {{ game.short_title }}</p>
+    <h1 id="game-title">{{ game.title }}</h1>
+    <p class="game-hero__platform">{{ game.platform_name }}</p>
+  </div>
+  <p class="game-hero__caption">{{ art.caption }}<span>Illustration réinterprétée par IA</span></p>
+</section>
+{% else %}
 <p class="eyebrow">Carnet de guilde <span> / </span> {{ game.short_title }}</p>
 <h1>{{ game.title }}</h1>
+{% endif %}
 <p class="lede">
   {{ game.platform_name }}
   {%- if game.played_from %} · joué de {{ game.played_from }}{% endif %}

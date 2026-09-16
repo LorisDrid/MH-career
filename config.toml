@@ -19,3 +19,25 @@ compile_sass = false
 build_search_index = false
 generate_feeds = false
 taxonomies = []
+
+# Habillage éditorial : ces illustrations ne sont pas des sources statistiques.
+# Une seule association partagée entre les fiches et les cartes de la collection.
+[extra.game_art.mh3u]
+image = "images/mh3u-guild.png"
+alt = "Réinterprétation du chasseur en armure dorée de MH3U, entouré de ses deux compagnons masqués."
+caption = "Mon chasseur et ses compagnons · D’après ma carte de guilde"
+
+[extra.game_art.mh4u]
+image = "images/mh4u-guild.png"
+alt = "Réinterprétation du chasseur de MH4U en armure claire, le poing levé, avec ses deux compagnons félins."
+caption = "Mon chasseur et ses compagnons · D’après ma carte de guilde"
+
+[extra.game_art.mhgen]
+image = "images/mhgen-guild.png"
+alt = "Réinterprétation du chasseur de Generations en armure rouge et bleu sombre à pointes, avec ses deux Palicos."
+caption = "Mon chasseur et ses compagnons · D’après ma carte de guilde"
+
+[extra.game_art.mhrise]
+image = "images/mhrise-guild.png"
+alt = "Réinterprétation des compagnons de Rise : Tabasco, Chumsky en cape verte, et Daniel, Palico en armure rouge."
+caption = "Tabasco et Daniel · D’après mes captures de Rise"
